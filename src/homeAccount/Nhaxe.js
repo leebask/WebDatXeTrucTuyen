@@ -79,7 +79,7 @@ export default function Nhaxe({ isMenuOpen, setIsMenuOpen }) {
                 </div>
                 <TabPanel value={value} index={1}>
                     <h1>
-                        DVKT
+                        Khánh
                     </h1>
                     <h3>
                         "Chất lượng là danh dự"
@@ -91,7 +91,7 @@ export default function Nhaxe({ isMenuOpen, setIsMenuOpen }) {
                 </TabPanel>
                 <TabPanel value={value} index={2}>
                     <h1>
-                        DVKT
+                    Khánh
                     </h1>
                     <h5>Được thành lập tháng 5/2022.</h5>
                 </TabPanel>

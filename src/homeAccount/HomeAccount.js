@@ -40,8 +40,7 @@ import Button from '@mui/material/Button';
 import { ToastContainer, toast } from 'react-toastify';
 
 import 'react-toastify/dist/ReactToastify.css';
-
-
+import { doc, onSnapshot, query, where } from "firebase/firestore";
 function HomeAccount({ isMenuOpen, setIsMenuOpen, }) {
 
   const user = useSelector(selectUser)
@@ -67,63 +66,89 @@ function HomeAccount({ isMenuOpen, setIsMenuOpen, }) {
   useEffect(() => {
     const getDataCars = async () => {
       try {
-
-        const response = await fetch(
-          `https://api-xe-khach.herokuapp.com/bus`);
-        console.log('response', response)
-
-        if (!response.ok) {
-          console.log('not ok')
-          throw new Error(
-            `This is an HTTP error: The status is ${response.status}`
-          );
-        }
-        console.log('ok')
-
-        let actualDataCars = await response.json();
-
-        console.log("DataCarsa1 " + actualDataCars)
-        dispatch(setCars(actualDataCars))
-        setDataCars(actualDataCars.reduce((obj, t) => ({
+      let _cars=await getDocs(collection(db,'bus'))
+      _cars=_cars.docs.map(t => ({
+       ...t.data(),
+       id: t.id
+     }))
+     console.log('cars',_cars)
+         dispatch(setCars(_cars))
+        setDataCars(_cars.reduce((obj, t) => ({
           ...obj,
           [t.maXe]: t
         }), {}));
+    //   try {
+
+    //     const response = await fetch(
+    //       `https://api-xe-khach.herokuapp.com/bus`);
+    //     console.log('response', response)
+
+    //     if (!response.ok) {
+    //       console.log('not ok')
+    //       throw new Error(
+    //         `This is an HTTP error: The status is ${response.status}`
+    //       );
+    //     }
+    //     console.log('ok')
+
+    //     let actualDataCars = await response.json();
+
+    //     console.log("DataCarsa1 " + actualDataCars)
+    //     dispatch(setCars(actualDataCars))
+    //     setDataCars(actualDataCars.reduce((obj, t) => ({
+    //       ...obj,
+    //       [t.maXe]: t
+    //     }), {}));
         setError(null);
-      } catch (err) {
-        setError(err.message);
-        setDataCars({});
-      } finally {
-        setLoading(false);
-      }
+
+  } catch (err) {
+    setError(err.message);
+    setDataTour({});
+  } finally {
+    setLoading(false);
+  }
     }
+
     getDataCars()
   }, [])
 
+    
   //get tour
   useEffect(() => {
     const getDataTour = async () => {
       try {
-
-        const response = await fetch(
-          `https://api-xe-khach.herokuapp.com/tour`);
-        console.log('response', response)
-
-        if (!response.ok) {
-          console.log('not ok')
-          throw new Error(
-            `This is an HTTP error: The status is ${response.status}`
-          );
-        }
-        console.log('ok')
-
-        let actualDataTour = await response.json();
-
-        console.log("DataToura1 " + actualDataTour)
-        dispatch(setCartour(actualDataTour))
-        setDataTour(actualDataTour.reduce((obj, t) => ({
+        let _tour=await getDocs(collection(db,'tour'))
+      _tour=_tour.docs.map(t => ({
+       ...t.data(),
+       id: t.id
+     }))
+     console.log('tour',_tour)
+         dispatch(setCartour(_tour))
+         setDataTour(_tour.reduce((obj, t) => ({
           ...obj,
           [t.maCX]: t
         }), {}));
+
+    //     const response = await fetch(
+    //       `https://api-xe-khach.herokuapp.com/tour`);
+    //     console.log('response', response)
+
+    //     if (!response.ok) {
+    //       console.log('not ok')
+    //       throw new Error(
+    //         `This is an HTTP error: The status is ${response.status}`
+    //       );
+    //     }
+    //     console.log('ok')
+
+    //     let actualDataTour = await response.json();
+
+    //     console.log("DataToura1 " + actualDataTour)
+    //     dispatch(setCartour(actualDataTour))
+    //     setDataTour(actualDataTour.reduce((obj, t) => ({
+    //       ...obj,
+    //       [t.maCX]: t
+    //     }), {}));
         setError(null);
       } catch (err) {
         setError(err.message);
@@ -131,7 +156,7 @@ function HomeAccount({ isMenuOpen, setIsMenuOpen, }) {
       } finally {
         setLoading(false);
       }
-    }
+     }
     getDataTour()
   }, [])
 
@@ -140,27 +165,37 @@ function HomeAccount({ isMenuOpen, setIsMenuOpen, }) {
   useEffect(() => {
     const getDataRoute = async () => {
       try {
+        let _route=await getDocs(collection(db,'route'))
+        _route=_route.docs.map(t => ({
+         ...t.data(),
+         id: t.id
+       }))
+       console.log('route',_route)
+      //  dispatch(setDataRoute(_route))
+       setDataRoute(_route.reduce((obj, t) => ({
+        ...obj,
+        [t.ma]: t
+      }), {}));
+        // const response = await fetch(
+        //   `https://api-xe-khach.herokuapp.com/route`);
+        // console.log('response', response)
 
-        const response = await fetch(
-          `https://api-xe-khach.herokuapp.com/route`);
-        console.log('response', response)
+        // if (!response.ok) {
+        //   console.log('not ok')
+        //   throw new Error(
+        //     `This is an HTTP error: The status is ${response.status}`
+        //   );
+        // }
+        // console.log('ok')
 
-        if (!response.ok) {
-          console.log('not ok')
-          throw new Error(
-            `This is an HTTP error: The status is ${response.status}`
-          );
-        }
-        console.log('ok')
+        // let actualDataRoute = await response.json();
 
-        let actualDataRoute = await response.json();
-
-        console.log("DataRoutea1 " + actualDataRoute)
-        // dispatch(setDataRoute(actualDataRoute))
-        setDataRoute(actualDataRoute.reduce((obj, t) => ({
-          ...obj,
-          [t.ma]: t
-        }), {}));
+        // console.log("DataRoutea1 " + actualDataRoute)
+        // // dispatch(setDataRoute(actualDataRoute))
+        // setDataRoute(actualDataRoute.reduce((obj, t) => ({
+        //   ...obj,
+        //   [t.ma]: t
+        // }), {}));
         setError(null);
       } catch (err) {
         setError(err.message);
@@ -193,23 +228,34 @@ function HomeAccount({ isMenuOpen, setIsMenuOpen, }) {
     const getDataTicket = async () => {
       try {
 
-        const response = await fetch(
-          `https://api-xe-khach.herokuapp.com/ticket`);
-        console.log('response', response)
+        // const response = await fetch(
+        //   `https://api-xe-khach.herokuapp.com/ticket`);
+        // console.log('response', response)
 
-        if (!response.ok) {
-          console.log('not ok')
-          throw new Error(
-            `This is an HTTP error: The status is ${response.status}`
-          );
-        }
-        console.log('ok')
+        // if (!response.ok) {
+        //   console.log('not ok')
+        //   throw new Error(
+        //     `This is an HTTP error: The status is ${response.status}`
+        //   );
+        // }
+        // console.log('ok')
 
-        let actualDataTicket = await response.json();
+        // let actualDataTicket = await response.json();
 
-        console.log("DataTicketa1 " + actualDataTicket)
-        dispatch(setticket(actualDataTicket))
-        setDataTicket(actualDataTicket);
+        // console.log("DataTicketa1 " + actualDataTicket)
+        let _ticket=await getDocs(collection(db,'ticket'))
+        _ticket=_ticket.docs.map(t => ({
+         ...t.data(),
+         id: t.id
+       }))
+       console.log('ticket',_ticket)
+      //  dispatch(setDataRoute(_route))
+      //  setDataRoute(_ticket.reduce((obj, t) => ({
+      //   ...obj,
+      //   [t.ma]: t
+      // }), {}));
+        dispatch(setticket(_ticket))
+        setDataTicket(_ticket);
         setError(null);
       } catch (err) {
         setError(err.message);
@@ -263,7 +309,9 @@ function HomeAccount({ isMenuOpen, setIsMenuOpen, }) {
             <div className={isMenuOpen ? 'homeAccount_imgtrans--hidden' : ""}>
               <img className='homeAccount__logoNation'
                 src={logoVN}
-                alt='' />
+                alt=''
+                onClick={()=>console.log(DataRoute)}
+                />
 
               <img className='homeAccount__logoNation'
                 src={logoAnh}
@@ -288,7 +336,10 @@ function HomeAccount({ isMenuOpen, setIsMenuOpen, }) {
             <h4>{"Chào " + user?.displayName}</h4>
           </div>
           <div className="homeAccount__right">
-            <Link to='' onClick={handleOpen}> Lịch sử</Link>
+            <Link to='' onClick={
+              handleOpen
+              // handleTestFirebase
+            }> Lịch sử</Link>
             <Link to='/' className='logout'>
               thoát
               <LogoutIcon />
@@ -296,7 +347,7 @@ function HomeAccount({ isMenuOpen, setIsMenuOpen, }) {
           </div>
         </div>
         <select className="cars__choose choosetour" defaultValue="" label="Chọn chuyến" onChange={handleSelectRoute}>
-          <option value="" disabled>Chọn chuyến</option>
+          <option value="" disabled >Chọn chuyến</option>
           {Object.keys(DataRoute).map(k => {
             const route = DataRoute[k];
             return (
@@ -328,6 +379,7 @@ function HomeAccount({ isMenuOpen, setIsMenuOpen, }) {
             (!dayTourSearch || DataTour[maCX]?.ngayDi === dayTourSearch.format('DD/MM/YYYY'))
           ).map(maCX => {// 
             const car = DataCars[DataTour[maCX]?.maXe]
+            console.log("test macx",DataTour[maCX])
             return (
               <Cars
                 key={maCX}
@@ -338,7 +390,9 @@ function HomeAccount({ isMenuOpen, setIsMenuOpen, }) {
                 loaiXe={car?.loaiXe}
                 soLuongGhe={car?.soLuongGhe}
                 gia={car?.gia}
+                // tour={DataTour[maCX]}
                 tour={DataTour[maCX]}
+
                 DataTicket={DataTicket.filter((ticket) => ticket.trangThai !== -1)}
 
               // typeCar={car.Name}

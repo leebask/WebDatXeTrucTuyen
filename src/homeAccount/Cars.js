@@ -274,14 +274,14 @@ function Cars({ imgSrc, maXe, bienSo, loaiXe, soLuongGhe, gia, tour ,DataTicket}
                                   <TimelineDot variant="outlined" color="primary" />
                                   <TimelineConnector />
                                 </TimelineSeparator>
-                                <TimelineContent>{tour?.noiDi}</TimelineContent>
+                                <TimelineContent>{tour?.maLT.split("-")[0]}</TimelineContent>
                               </TimelineItem>
 
                               <TimelineItem>
                                 <TimelineSeparator>
                                   <TimelineDot variant="outlined" color="secondary" />
                                 </TimelineSeparator>
-                                <TimelineContent>{tour?.noiDen}</TimelineContent>
+                                <TimelineContent>{tour?.maLT.split("-")[1]}</TimelineContent>
                               </TimelineItem>
                             </Timeline>
                             <div>Tổng giá:{tour.gia*layMaGhe.length} VNĐ</div>
@@ -512,7 +512,7 @@ function Cars({ imgSrc, maXe, bienSo, loaiXe, soLuongGhe, gia, tour ,DataTicket}
           {/* <button className="cars__choose">Chọn tuyến</button> */}
           <div className="cars__choose" >
             {/* Sài Gòn-Đắk Lắk */}
-            {tour?.noiDi} - {tour?.noiDen}
+            {tour?.maLT.split("-")[0]} - {tour?.maLT.split("-")[1]}
             {/* <option value="saab">Đắk Lắk-Sài Gòn</option> */}
           </div>
 
