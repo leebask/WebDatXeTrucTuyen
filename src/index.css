@@ -16,3 +16,16 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+.onclick_header__nhaxe{
+  color: rgb(238, 181, 24) !important;
+}
+.onclick_header__chuyenxe{
+  color: rgb(238, 181, 24) !important;
+}
+.onclick_header__lienhe{
+  color: rgb(238, 181, 24) !important;
+}
+.onclick_header__taikhoan{
+  color: rgb(238, 181, 24) !important;
+}

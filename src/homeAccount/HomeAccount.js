@@ -298,7 +298,7 @@ function HomeAccount({ isMenuOpen, setIsMenuOpen, }) {
             </Link>
           </div>
           <div className='homeAccount__links'>
-            <Link to='/homeaccount'>home</Link>
+            <Link to='/homeaccount' className={window.location.href.split('/')[3]=='homeaccount'&&'onclick_header__home'}>home</Link>
             <Link to='/nhaxe'>nhà xe</Link>
             <Link to='/cartour'>chuyến xe</Link>
             <Link to='/contact'>Liên hệ</Link>
@@ -310,12 +310,15 @@ function HomeAccount({ isMenuOpen, setIsMenuOpen, }) {
               <img className='homeAccount__logoNation'
                 src={logoVN}
                 alt=''
-                onClick={()=>console.log(DataRoute)}
+                onClick={()=>console.log(Object.keys(DataTour).filter(maCX =>
+                  (!SelectedDataRoute || DataTour[maCX]?.maLT === DataRoute[SelectedDataRoute]?.ma) &&
+                  (!dayTourSearch || DataTour[maCX]?.ngayDi === dayTourSearch.format('DD/MM/YYYY'))
+                ))}
                 />
 
               <img className='homeAccount__logoNation'
                 src={logoAnh}
-                alt='' onClick={() => console.log('a')} />
+                alt='' onClick={() => console.log(DataRoute[SelectedDataRoute]?.ma)} />
             </div>
             <div className={isMenuOpen ? 'homeAccount_imgtrans--hidden' : ""}>
               <Link to='/login' onClick={logoutOfApp}
@@ -375,11 +378,11 @@ function HomeAccount({ isMenuOpen, setIsMenuOpen, }) {
         />
         <div className="homeAccount__cars">
           {Object.keys(DataTour).filter(maCX =>
-            (!SelectedDataRoute || DataTour[maCX]?.noiDi === DataRoute[SelectedDataRoute]?.noiDi && DataTour[maCX]?.noiDen === DataRoute[SelectedDataRoute]?.noiDen) &&
+            (!SelectedDataRoute || DataTour[maCX]?.maLT.toLowerCase() === DataRoute[SelectedDataRoute]?.ma.toLowerCase()) &&
             (!dayTourSearch || DataTour[maCX]?.ngayDi === dayTourSearch.format('DD/MM/YYYY'))
           ).map(maCX => {// 
             const car = DataCars[DataTour[maCX]?.maXe]
-            console.log("test macx",DataTour[maCX])
+            console.log("test macx",DataCars[DataTour[maCX]?.maXe])
             return (
               <Cars
                 key={maCX}

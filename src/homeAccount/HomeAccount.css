@@ -55,6 +55,9 @@
   .homeAccount__links > a:hover{
     color: rgb(238, 181, 24);
   }
+  .onclick_header__home{
+    color: rgb(238, 181, 24) !important;
+  }
   
   .homeAccount__right {
     display: flex;

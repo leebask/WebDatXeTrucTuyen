@@ -43,10 +43,10 @@ function HeaderHomeAccount({isMenuOpen,setIsMenuOpen}) {
             </div>
             <div className='homeAccount__links'>
             <Link to='/homeaccount'>home</Link>
-            <Link to='/nhaxe'>nhà xe</Link>
-            <Link to='/cartour'>chuyến xe</Link>
-            <Link to='/contact'>Liên hệ</Link>
-            <Link to='/account'>Tài khoản</Link>
+            <Link to='/nhaxe'className={window.location.href.split('/')[3]=='nhaxe'&&'onclick_header__nhaxe'}>nhà xe</Link>
+            <Link to='/cartour'className={window.location.href.split('/')[3]=='cartour'&&'onclick_header__chuyenxe'}>chuyến xe</Link>
+            <Link to='/contact'className={window.location.href.split('/')[3]=='contact'&&'onclick_header__lienhe'}>Liên hệ</Link>
+            <Link to='/account'className={window.location.href.split('/')[3]=='account'&&'onclick_header__taikhoan'}>Tài khoản</Link>
             </div>
             <div className='homeAccount__right'>
             
