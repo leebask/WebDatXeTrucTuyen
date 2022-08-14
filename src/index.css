@@ -29,3 +29,6 @@ code {
 .onclick_header__taikhoan{
   color: rgb(238, 181, 24) !important;
 }
+.onclick_header__Admin{
+  color: red !important;
+}

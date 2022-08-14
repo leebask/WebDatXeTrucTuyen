@@ -47,6 +47,7 @@ function HeaderHomeAccount({isMenuOpen,setIsMenuOpen}) {
             <Link to='/cartour'className={window.location.href.split('/')[3]=='cartour'&&'onclick_header__chuyenxe'}>chuyến xe</Link>
             <Link to='/contact'className={window.location.href.split('/')[3]=='contact'&&'onclick_header__lienhe'}>Liên hệ</Link>
             <Link to='/account'className={window.location.href.split('/')[3]=='account'&&'onclick_header__taikhoan'}>Tài khoản</Link>
+            <Link to='/admin'className={window.location.href.split('/')[3]=='admin'&&'onclick_header__Admin'}>Admin</Link>
             </div>
             <div className='homeAccount__right'>
             

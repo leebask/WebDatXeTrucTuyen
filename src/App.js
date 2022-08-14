@@ -15,6 +15,7 @@ import Account from './homeAccount/Account';
 import CarTour from './homeAccount/carTour/CarTour';
 import Footer from './footer/Footer';
 import { ToastContainer } from 'react-toastify';
+import Admin from './admin/Admin';
 
 
 
@@ -75,8 +76,11 @@ function App() {
               setIsMenuOpen={setIsMenuOpen} />
           })}
 
-          <Route path="/cartour" element={
-            <CarTour />} />
+          <Route path="/cartour" element={<CarTour />} />
+          <Route path="/admin" element={<Admin />} >
+
+            <Route index path="user" element={<CarTour />} />
+          </Route>
         </Routes>
         <ToastContainer />
       </div>

@@ -303,6 +303,7 @@ function HomeAccount({ isMenuOpen, setIsMenuOpen, }) {
             <Link to='/cartour'>chuyến xe</Link>
             <Link to='/contact'>Liên hệ</Link>
             <Link to='/account'>Tài khoản</Link>
+            <Link to='/admin'className={window.location.href.split('/')[3]=='admin'&&'onclick_header__Admin'}>Admin</Link>
           </div>
           <div className='homeAccount__right'>
 
@@ -351,6 +352,7 @@ function HomeAccount({ isMenuOpen, setIsMenuOpen, }) {
         </div>
         <select className="cars__choose choosetour" defaultValue="" label="Chọn chuyến" onChange={handleSelectRoute}>
           <option value="" disabled >Chọn chuyến</option>
+          <option value=""  >Tất cả</option>
           {Object.keys(DataRoute).map(k => {
             const route = DataRoute[k];
             return (
