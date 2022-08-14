@@ -77,9 +77,9 @@ function App() {
           })}
 
           <Route path="/cartour" element={<CarTour />} />
-          <Route path="/admin" element={<Admin />} >
+          <Route path="/admin/*" element={<Admin />} >
 
-            <Route index path="user" element={<CarTour />} />
+            {/* <Route index path="user" element={<CarTour />} /> */}
           </Route>
         </Routes>
         <ToastContainer />

@@ -1,6 +1,5 @@
-.headerBlock{
-    background: url('../images/xe32cho.png') no-repeat
-    center 60% fixed;
+.headerBlock {
+  background: url('../images/xe32cho.png') no-repeat center 60% fixed;
   -webkit-background-size: cover;
   -moz-background-size: cover;
   -o-background-size: cover;
@@ -13,34 +12,36 @@
   display: grid;
   place-items: center;
 
-  
+
 }
 
-.headerBlock__infoText{
+.headerBlock__infoText {
   display: flex;
   flex-direction: column;
   gap: 5px;
   height: 360px;
   padding-bottom: 42px;
 }
+
 .headerBlock__infoText {
   text-align: center;
   flex: 1;
 }
 
-.headerBlock__infoText > h1 {
+.headerBlock__infoText>h1 {
   color: #393c41;
   font-weight: 500;
   font-size: 38px;
 }
-.headerBlock__infoText > h4 {
+
+.headerBlock__infoText>h4 {
   font-weight: 400;
   font-weight: bold;
   font-size: 18px;
   color: #f70944;
 }
 
-.headerBlock__actions > button {
+.headerBlock__actions>button {
   cursor: pointer;
   border: none;
   width: 260px;
@@ -52,20 +53,21 @@
   outline: none;
 }
 
-.headerBlock__btnPrimary{
+.headerBlock__btnPrimary {
   background-color: #393c41;
   color: white;
   opacity: 0.9;
   cursor: pointer;
 }
+
 .headerBlock__buttonSecondary {
   background-color: white;
   color: black;
   opacity: 0.8;
   cursor: pointer;
-  
+
 }
 
-.headerBlock__actions > button:hover{
-    opacity: 0.5;
+.headerBlock__actions>button:hover {
+  opacity: 0.5;
 }

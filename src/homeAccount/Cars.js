@@ -37,7 +37,7 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { setticket } from '../features/ticketSlice';
 
-const clsx = (...classNames)=> classNames.filter(c => !!c).join(' ')
+const clsx = (...classNames) => classNames.filter(c => !!c).join(' ')
 
 const steps = ['Chọn chỗ', 'Điểm đón', 'Điền thông tin'];
 const style = {
@@ -53,7 +53,7 @@ const style = {
   p: 4,
 };
 
-function Cars({ imgSrc, maXe, bienSo, loaiXe, soLuongGhe, gia, tour ,DataTicket}) {
+function Cars({ imgSrc, maXe, bienSo, loaiXe, soLuongGhe, gia, tour, DataTicket }) {
 
   const user = useSelector(selectUser)
 
@@ -83,7 +83,7 @@ function Cars({ imgSrc, maXe, bienSo, loaiXe, soLuongGhe, gia, tour ,DataTicket}
   };
 
   const allStepsCompleted = () => {
-    
+
     return completedSteps() === totalSteps();
   };
   // const allStepsCompletedHandleticket = () => {
@@ -126,16 +126,16 @@ function Cars({ imgSrc, maXe, bienSo, loaiXe, soLuongGhe, gia, tour ,DataTicket}
   const addMaGhe = (e) => {
     e.stopPropagation();
     e.preventDefault();
-    const a = DataTicket.filter((ticket)=> ticket.maCX == tour.maCX)
-    console.log(a.map(t=>t.maGhe))
+    const a = DataTicket.filter((ticket) => ticket.maCX == tour.maCX)
+    console.log(a.map(t => t.maGhe))
     // console.log(a.filter(magheticket =>magheticket == e.target.id ).length >0 )
-    if(a.filter((ticket)=>ticket.maGhe.split(',').map(g=>g.trim()).includes(e.target.id)).length<=0) {
+    if (a.filter((ticket) => ticket.maGhe.split(',').map(g => g.trim()).includes(e.target.id)).length <= 0) {
       setlayMaGhe([
         ...layMaGhe, e.target.id
       ])
     }
     else {
-  
+
       toast.warn("Ghế đã được đặt! Mời chọn ghế khác.")
     }
     console.log([
@@ -156,15 +156,15 @@ function Cars({ imgSrc, maXe, bienSo, loaiXe, soLuongGhe, gia, tour ,DataTicket}
       content.push(<li className="row row--1">
         <ol className="seats" type="A">
           <li className="seat">
-            <input className={clsx(DataTicket.some(t=>t.maCX == tour.maCX&&t.maGhe.split(',').map(g=>g.trim()).includes(`${j}A`))&&'unavailable')} type="checkbox" id={`${j}A`} onClick={addMaGhe} />
+            <input className={clsx(DataTicket.some(t => t.maCX == tour.maCX && t.maGhe.split(',').map(g => g.trim()).includes(`${j}A`)) && 'unavailable')} type="checkbox" id={`${j}A`} onClick={addMaGhe} />
             <label for={`${j}A`}>{j}A</label>
           </li>
           <li className="seat">
-            <input className={clsx(DataTicket.some(t=>t.maCX == tour.maCX&&t.maGhe.split(',').map(g=>g.trim()).includes(`${j}B`))&&'unavailable')} type="checkbox" id={`${j}B`} onClick={addMaGhe} />
+            <input className={clsx(DataTicket.some(t => t.maCX == tour.maCX && t.maGhe.split(',').map(g => g.trim()).includes(`${j}B`)) && 'unavailable')} type="checkbox" id={`${j}B`} onClick={addMaGhe} />
             <label for={`${j}B`}>{j}B</label>
           </li>
           <li className="seat">
-            <input className={clsx(DataTicket.some(t=>t.maCX == tour.maCX&&t.maGhe.split(',').map(g=>g.trim()).includes(`${j}C`))&&'unavailable')} type="checkbox" id={`${j}C`} onClick={addMaGhe} />
+            <input className={clsx(DataTicket.some(t => t.maCX == tour.maCX && t.maGhe.split(',').map(g => g.trim()).includes(`${j}C`)) && 'unavailable')} type="checkbox" id={`${j}C`} onClick={addMaGhe} />
             <label for={`${j}C`}>{j}C</label>
           </li>
         </ol>
@@ -186,14 +186,14 @@ function Cars({ imgSrc, maXe, bienSo, loaiXe, soLuongGhe, gia, tour ,DataTicket}
 
 
 
-  const PostTicket =() => {
-   
+  const PostTicket = () => {
+
     // POST request using fetch inside useEffect React hook
     const requestOptions = {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        
+
         maCX: tour.maCX,
         tenKH: user.displayName,
         email: user.email,
@@ -201,13 +201,13 @@ function Cars({ imgSrc, maXe, bienSo, loaiXe, soLuongGhe, gia, tour ,DataTicket}
         ngayDat: date,
         maGhe: layMaGhe.join(','),
         trangThai: 1,
-        ghiChu: "Đón tại"+" "+chonDiaDiem +", " + " Ghi chú"+" "+ ghiChu
+        ghiChu: "Đón tại" + " " + chonDiaDiem + ", " + " Ghi chú" + " " + ghiChu
       })
     };
-    fetch('https://api-xe-khach.herokuapp.com/ticket',requestOptions)
+    fetch('https://api-xe-khach.herokuapp.com/ticket', requestOptions)
       .then(response => response.json())
-      .then(data => { 
-        setlayMaGhe([]) 
+      .then(data => {
+        setlayMaGhe([])
         setPhoneNumber(null)
         toast.success("Đặt thành công!")
         setActiveStep(0);
@@ -215,15 +215,15 @@ function Cars({ imgSrc, maXe, bienSo, loaiXe, soLuongGhe, gia, tour ,DataTicket}
         setGhiChu()
         setChonDiaDiem()
       });
-    
+
 
     // empty dependency array means this effect will only run once (like componentDidMount in classes)
   }
 
-  
+
   return (
     <div className="cars">
-     
+
       <div>
         <Modal
           style={{ overflow: "scroll" }}
@@ -256,7 +256,7 @@ function Cars({ imgSrc, maXe, bienSo, loaiXe, soLuongGhe, gia, tour ,DataTicket}
                       <Box sx={{ display: 'flex', flexDirection: 'row', pt: 2 }}>
                         <Box sx={{ flex: '1 1 auto' }} />
                         <Button onClick={handleReset}>Reset</Button>
-                        <Button  onClick={PostTicket}>Đặt vé</Button>
+                        <Button onClick={PostTicket}>Đặt vé</Button>
 
                       </Box>
                     </React.Fragment>
@@ -284,7 +284,7 @@ function Cars({ imgSrc, maXe, bienSo, loaiXe, soLuongGhe, gia, tour ,DataTicket}
                                 <TimelineContent>{tour?.maLT.split("-")[1]}</TimelineContent>
                               </TimelineItem>
                             </Timeline>
-                            <div>Tổng giá:{tour.gia*layMaGhe.length} VNĐ</div>
+                            <div>Tổng giá:{tour.gia * layMaGhe.length} VNĐ</div>
                           </div>
                           <div className="step1_desc">
                             <div>
@@ -368,7 +368,7 @@ function Cars({ imgSrc, maXe, bienSo, loaiXe, soLuongGhe, gia, tour ,DataTicket}
                             >
                               {
                                 tour.noiDi == "SaiGon" ? (
-                                  <FormControlLabel onClick={(e)=>setChonDiaDiem(e.target.value)} value="Bến Xe Miền Đông" control={<Radio />} label={
+                                  <FormControlLabel onClick={(e) => setChonDiaDiem(e.target.value)} value="Bến Xe Miền Đông" control={<Radio />} label={
                                     <><div style={{ fontSize: 'large' }}>Bến Xe Miền Đông</div>
                                       <span style={{ fontSize: 'small', opacity: 0.8 }}>
                                         <LocationOnIcon />
@@ -376,7 +376,7 @@ function Cars({ imgSrc, maXe, bienSo, loaiXe, soLuongGhe, gia, tour ,DataTicket}
                                       </span>
                                     </>
                                   } />
-                                ) : (<FormControlLabel onClick={(e)=>setChonDiaDiem(e.target.value)} value="Bến Xe Đắk Lắk" control={<Radio />} label={
+                                ) : (<FormControlLabel onClick={(e) => setChonDiaDiem(e.target.value)} value="Bến Xe Đắk Lắk" control={<Radio />} label={
                                   <><div style={{ fontSize: 'large' }}>Bến Xe Đắk Lắk</div>
                                     <span style={{ fontSize: 'small', opacity: 0.8 }}>
                                       <LocationOnIcon />
@@ -386,7 +386,7 @@ function Cars({ imgSrc, maXe, bienSo, loaiXe, soLuongGhe, gia, tour ,DataTicket}
                                 } />)
                               }
 
-                              <FormControlLabel onClick={(e)=>setChonDiaDiem(e.target.value)} value="Nhà xe liên hệ để đón" control={<Radio />} label={
+                              <FormControlLabel onClick={(e) => setChonDiaDiem(e.target.value)} value="Nhà xe liên hệ để đón" control={<Radio />} label={
                                 <><div style={{ fontSize: 'large' }}>Nhà xe liên hệ để đón</div>
                                   <span style={{ fontSize: 'small', opacity: 0.8 }}>
                                     <LocationOnIcon />
@@ -431,7 +431,7 @@ function Cars({ imgSrc, maXe, bienSo, loaiXe, soLuongGhe, gia, tour ,DataTicket}
                                 id="outlined-error"
                                 label="Số điện thoại"
                                 defaultValue=""
-                                onChange={e=>setPhoneNumber(e.target.value)}
+                                onChange={e => setPhoneNumber(e.target.value)}
                               />
                               <TextField
                                 // error
@@ -452,7 +452,7 @@ function Cars({ imgSrc, maXe, bienSo, loaiXe, soLuongGhe, gia, tour ,DataTicket}
                                 placeholder="Ghi chú..."
                                 defaultValue=""
                                 style={{ width: 500 }}
-                                onChange={(e)=>{setGhiChu(e.target.value)}}
+                                onChange={(e) => { setGhiChu(e.target.value) }}
                               // helperText="Incorrect entry."
                               />
 
@@ -526,7 +526,7 @@ function Cars({ imgSrc, maXe, bienSo, loaiXe, soLuongGhe, gia, tour ,DataTicket}
 
         </p>
       </div>
-      
+
     </div>
   )
 }
