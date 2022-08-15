@@ -45,8 +45,8 @@ function ConTact({ isMenuOpen, setIsMenuOpen }) {
                 {isMenuOpen && <Menu />}
             </>
             <div id="contact" className="content-section">
-                <h2 className="section-heading">LIÊN HỆ</h2>
-                <p className="section-sub-heading">Viết mail cho chúng tôi!</p>
+                <h2 className="contact-section-heading">LIÊN HỆ</h2>
+                <p className="contact-section-sub-heading">Viết mail cho chúng tôi!</p>
                 <div className="text-input-contact row">
                     <div className="col col-half col-full-mobile">
                         <p className="text-contact-line"><i className="ti-location-pin icon-contact" />Quận 9, TP.HCM / TP. Buôn Mê Thuột </p>

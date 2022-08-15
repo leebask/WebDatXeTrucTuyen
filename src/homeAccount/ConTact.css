@@ -4,7 +4,7 @@
     flex-direction: column;
     padding: 50px 200px 0 200px;
 }
-.section-heading, .section-sub-heading{
+.contact-section-heading, .contact-section-sub-heading{
     align-self: center !important;
 }
 .text-input-contact {

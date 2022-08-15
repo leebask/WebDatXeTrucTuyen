@@ -103,7 +103,7 @@ function HomeAccount({ isMenuOpen, setIsMenuOpen, }) {
 
   } catch (err) {
     setError(err.message);
-    setDataTour({});
+    setDataCars({});
   } finally {
     setLoading(false);
   }
