@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react'
-import { Table } from 'antd';
+import { Button, Table } from 'antd';
 import { useDispatch } from 'react-redux';
 import { setCars } from '../features/carsSlice';
 import { collection, getDocs } from 'firebase/firestore';
 import { db } from '../firebase';
+import './Car.css'
 
 function Car() {
     const [DataCars, setDataCars] = useState([{}]);
@@ -52,10 +53,20 @@ function Car() {
         {
           title: 'Biển số',
           dataIndex: 'bienSo',
+          render: (data, record) => {
+            return (
+                <div
+                    style={{textAlign: 'center', color: '#79aded',border: '1px solid rgb(241, 152, 61)', borderRadius: '5px' }}
+                >
+                    {data}
+                </div>
+            );
+        }
         },
         {
           title: 'Số lượng ghế',
           dataIndex: 'soLuongGhe',
+          width: '200px',
         },
         {
             title: 'Loại xe',
@@ -65,14 +76,14 @@ function Car() {
             title: 'Giá',
             dataIndex: 'gia',
             render: (data, record) => {
-                return (
-                    <div
-                        style={{ color: '#79aded' }}
-                        >
-                        {data} VNĐ
-                    </div>
-                );
-            }
+              return (
+                  <div
+                      style={{ textAlign: 'center',color: '#79aded',border: '1px solid #79aded' }}
+                  >
+                      {data} VNĐ
+                  </div>
+              );
+          }
           },
       ];
       const data = [];
@@ -126,7 +137,13 @@ function Car() {
     ],
   };
   return (
-    <div style={{padding: '10px'}}>
+    <div className='admin_car' style={{padding: '10px',width:'1200px'}}>
+      <div className='admin_tour_header'>
+            <Button type="primary">Thêm</Button>
+            <Button type="primary">Sửa</Button>
+            <Button type="primary">Xóa</Button>
+
+            </div>
             <Table rowSelection={rowSelection} columns={columns} dataSource={DataCars} />
         </div>
   )

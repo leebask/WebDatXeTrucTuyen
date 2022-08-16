@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from 'react'
-import { Table } from 'antd';
+import { Avatar, Button, Table } from 'antd';
 import { useDispatch } from 'react-redux';
 import { setCars } from '../features/carsSlice';
 import { collection, getDocs } from 'firebase/firestore';
 import { db } from '../firebase';
 import { Divider } from '@mui/material';
+import './Tour.css'
 
 function Tour() {
     const [DataTour, setDataTour] = useState([{}]);
@@ -89,15 +90,15 @@ function Tour() {
                 maCX: element.maCX,
                 maLT: element.maLT,
                 maXe: element.maXe,
-                ngayDi:element.ngayDi,
-                noiDi:DataRoute.filter(k => k.ma == element.maLT).map(k => k.noiDi),
-                noiDen:DataRoute.filter(k => k.ma == element.maLT).map(k => k.noiDen)
+                ngayDi: element.ngayDi,
+                noiDi: DataRoute.filter(k => k.ma == element.maLT).map(k => k.noiDi),
+                noiDen: DataRoute.filter(k => k.ma == element.maLT).map(k => k.noiDen)
             };
             arrCarNew.push(object);
         });
 
         setDataTour(arrCarNew)
-        
+
     }, [DataRoute])
 
     const columns = [
@@ -106,8 +107,22 @@ function Tour() {
             dataIndex: 'maLT',
         },
         {
-            title: 'Ngày đi',
+            title: 'Mã chuyến xe',
             dataIndex: 'maCX',
+            render: (data, record) => {
+                return (
+                    <Avatar
+                        size={36}
+                        style={{
+                            backgroundColor: 'rgb(241, 152, 61)'
+                        }}
+
+                    >
+                        {data}
+                    </Avatar>
+                )
+            }
+
         },
         {
             title: 'Mã xe',
@@ -132,15 +147,15 @@ function Tour() {
             render: (data, record) => {
                 return (
                     <div
-                        style={{ color: '#79aded' }}
-                        >
+                        style={{textAlign: 'center', color: '#79aded',border: '1px solid #79aded' }}
+                    >
                         {data} VNĐ
                     </div>
                 );
             }
         },
 
-       
+
     ];
     const data = [];
 
@@ -193,8 +208,13 @@ function Tour() {
         ],
     };
     return (
-        <div style={{ padding: '10px' }}>
-            <div onClick={() => {console.log("sss",DataRoute.filter(k => k.ma == 'DakLak-Saigon'))}}>click</div>
+        <div  className='admin_tour' style={{ padding: '10px',width:'1200px' }}>
+            <div className='admin_tour_header'>
+            <Button type="primary">Thêm</Button>
+            <Button type="primary">Sửa</Button>
+            <Button type="primary">Xóa</Button>
+
+            </div>
             <Table rowSelection={rowSelection} columns={columns} dataSource={DataTour} />
         </div>
     )

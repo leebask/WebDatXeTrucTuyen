@@ -1,5 +1,8 @@
 import React, { useState } from 'react'
 import { Table } from 'antd';
+import './User.css'
+
+
 function User() {
     const columns = [
         {
@@ -73,7 +76,7 @@ function User() {
     ],
   };
   return (
-    <div>
+    <div className='admin_user' style={{ padding: '10px',width:'1200px' }}>
             
             <Table rowSelection={rowSelection} columns={columns} dataSource={data} />
         </div>

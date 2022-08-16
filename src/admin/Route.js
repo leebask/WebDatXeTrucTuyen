@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react'
-import { Table } from 'antd';
+import { Button, Table } from 'antd';
 import { useDispatch } from 'react-redux';
 import { setCars } from '../features/carsSlice';
 import { collection, getDocs } from 'firebase/firestore';
 import { db } from '../firebase';
+import './Route.css'
 
 function Route() {
     const [DataRoute, setDataRoute] = useState([{}]);
@@ -62,6 +63,15 @@ function Route() {
           {
             title: 'Khoảng cách',
             dataIndex: 'khoangCach',
+            render: (data, record) => {
+              return (
+                  <div
+                      style={{ color: 'rgb(191 23 72)' }}
+                      >
+                      {data} Km
+                  </div>
+              );
+          }
           },
       ];
       const data = [];
@@ -115,7 +125,13 @@ function Route() {
     ],
   };
   return (
-    <div style={{padding: '10px'}}>
+    <div className='admin_route' style={{padding: '10px',width:'1200px'}}>
+      <div className='admin_tour_header'>
+            <Button type="primary">Thêm</Button>
+            <Button type="primary">Sửa</Button>
+            <Button type="primary">Xóa</Button>
+
+            </div>
             <Table rowSelection={rowSelection} columns={columns} dataSource={DataRoute} />
         </div>
   )

@@ -12,6 +12,8 @@ import {
   ContainerOutlined,
   DesktopOutlined,
   MailOutlined,
+  ArrowRightOutlined,
+  ArrowLeftOutlined,
   LogoutOutlined,
   MenuFoldOutlined,
   MenuUnfoldOutlined,
@@ -23,7 +25,8 @@ import User from './User'
 import Car from './Car'
 import Tour from './Tour'
 import Routeeeee from './Route'
-
+import Ticket from './Ticket'
+import Logo from '../images/logo.png'
 
 
 function getItem(label, key, icon, children, type) {
@@ -68,18 +71,30 @@ const items = [
     '3',
     <SwapOutlined />,
   ),
-  getItem('Quản lí vé', 'sub1', <ContainerOutlined />, [
-    getItem('Option 5', '5'),
-    getItem('Option 6', '6'),
-    getItem('Option 7', '7'),
-    getItem('Option 8', '8'),
-  ]),
-  getItem('User', 'sub2', <AppstoreOutlined />, [
-    getItem('Option 9', '9'),
-    getItem('Option 10', '10'),
-    getItem('Submenu', 'sub3', null, [getItem('Option 11', '11'), getItem('Option 12', '12')]),
-  ]),
-  getItem('Yêu cầu điều phối xe', '4', <CommentOutlined />),
+  getItem(<Link to="/admin/ticket" style={{
+    fontWeight: 'bold',
+    color: 'rgb(241 152 61)'
+  }}>
+    Quản lí vé
+  </Link>, '4', <ContainerOutlined />),
+  //  [
+  //   getItem('Option 5', '5'),
+  //   getItem('Option 6', '6'),
+  //   getItem('Option 7', '7'),
+  //   getItem('Option 8', '8'),
+  // ]),
+  getItem(<Link to="/admin/ticket" style={{
+    fontWeight: 'bold',
+    color: 'rgb(241 152 61)'
+  }}>
+    User
+  </Link>, '5', <AppstoreOutlined />,),
+  getItem(<Link to="/admin/user" style={{
+    fontWeight: 'bold',
+    color: 'rgb(241 152 61)'
+  }}>
+    Yêu cầu điều phối xe
+  </Link>, '6', <CommentOutlined />),
   getItem(
     <Link to="/login" style={{
       fontWeight: 'bold',
@@ -120,8 +135,12 @@ function Admin() {
       <div
         style={{
           maxWidth: 256,
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems:'center'
         }}
       >
+        <img src={Logo} style={{ width:'90px'}}></img>
         <Button
           type="primary"
           onClick={toggleCollapsed}
@@ -129,7 +148,7 @@ function Admin() {
             marginBottom: 16,
           }}
         >
-          {collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
+          {collapsed ? <ArrowLeftOutlined /> : <ArrowRightOutlined />}
         </Button>
         <Menu
           defaultSelectedKeys={['1']}
@@ -148,6 +167,7 @@ function Admin() {
         <Route path="car" element={<Car />}></Route>
         <Route path="tour" element={<Tour />}></Route>
         <Route path="route" element={<Routeeeee />}></Route>
+        <Route path="ticket" element={<Ticket />}></Route>
 
 
       </Routes>
