@@ -76,9 +76,11 @@ function User() {
     ],
   };
   return (
-    <div className='admin_user' style={{ padding: '10px',width:'1200px' }}>
+    <div className='admin_user' style={{ padding: '36px 10px 10px 10px', width: '100%' }}>
             
-            <Table rowSelection={rowSelection} columns={columns} dataSource={data} />
+            <Table rowSelection={rowSelection} columns={columns} dataSource={data}
+             pagination={{ defaultPageSize: 5, showSizeChanger: true, pageSizeOptions: ['5','10', '20', '30']}}
+             />
         </div>
   )
 }

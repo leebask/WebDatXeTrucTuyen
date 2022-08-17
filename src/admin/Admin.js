@@ -56,7 +56,7 @@ const items = [
       fontWeight: 'bold',
       color: 'rgb(241 152 61)'
     }}>
-      Quản lí chuyến xe
+      Quản lý chuyến xe
     </Link>,
     '2',
     <DesktopOutlined />,
@@ -66,7 +66,7 @@ const items = [
       fontWeight: 'bold',
       color: 'rgb(241 152 61)'
     }}>
-      Quản lí lộ trình
+      Quản lý lộ trình
     </Link>,
     '3',
     <SwapOutlined />,
@@ -75,7 +75,7 @@ const items = [
     fontWeight: 'bold',
     color: 'rgb(241 152 61)'
   }}>
-    Quản lí vé
+    Quản lý vé
   </Link>, '4', <ContainerOutlined />),
   //  [
   //   getItem('Option 5', '5'),

@@ -1,12 +1,14 @@
 import React, { useEffect, useState } from 'react'
-import { Avatar, Button, Table } from 'antd';
+import { Avatar, Button, Table, Input } from 'antd';
 import { useDispatch } from 'react-redux';
 import { setCars } from '../features/carsSlice';
-import { collection, getDocs } from 'firebase/firestore';
+import { collection, getDocs, onSnapshot, query, where } from 'firebase/firestore';
 import { db } from '../firebase';
 import { Divider } from '@mui/material';
 import './Tour.css'
-
+import {
+    SearchOutlined
+} from '@ant-design/icons';
 function Tour() {
     const [DataTour, setDataTour] = useState([{}]);
     const [DataRoute, setDataRoute] = useState([{}]);
@@ -147,7 +149,7 @@ function Tour() {
             render: (data, record) => {
                 return (
                     <div
-                        style={{textAlign: 'center', color: '#79aded',border: '1px solid #79aded' }}
+                        style={{ textAlign: 'center', color: '#79aded', border: '1px solid #79aded' }}
                     >
                         {data} VNĐ
                     </div>
@@ -207,15 +209,35 @@ function Tour() {
             },
         ],
     };
+    const [findWithCXe, setFindWithCXe] = useState();
+
+    const HandleSearch = (e) => {
+        //Query
+        onSnapshot(
+            query(
+                collection(db, 'tour'), where('maCX', '==', findWithCXe)), (snapshot) => {
+                    let bus = []
+                    snapshot.docs.forEach(doc => {
+                        bus.push({ ...doc.data(), id: doc.id })
+                    })
+
+                    setDataTour(bus)
+                })
+
+    }
     return (
-        <div  className='admin_tour' style={{ padding: '10px',width:'1200px' }}>
+        <div className='admin_tour' style={{ padding: '36px 10px 10px 10px', width: '100%' }}>
             <div className='admin_tour_header'>
-            <Button type="primary">Thêm</Button>
-            <Button type="primary">Sửa</Button>
-            <Button type="primary">Xóa</Button>
+                <Input placeholder="Tìm kiếm" onChange={(e) => setFindWithCXe(e.target.value)} />
+                <Button type="secondary" onClick={HandleSearch}><SearchOutlined />Tìm</Button>
+                <Button type="primary">Thêm</Button>
+                <Button type="primary">Sửa</Button>
+                <Button type="primary">Xóa</Button>
 
             </div>
-            <Table rowSelection={rowSelection} columns={columns} dataSource={DataTour} />
+            <Table rowSelection={rowSelection} columns={columns} dataSource={DataTour}
+                pagination={{ defaultPageSize: 5, showSizeChanger: true, pageSizeOptions: ['5', '10', '20', '30'] }}
+            />
         </div>
     )
 }

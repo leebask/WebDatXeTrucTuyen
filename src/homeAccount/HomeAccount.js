@@ -24,7 +24,7 @@ import { Pagination } from '@mui/material'
 import Footer from '../footer/Footer'
 //DB
 import { db } from '../firebase'
-import { collection, getDocs } from 'firebase/firestore'
+import { collection, getDocs, updateDoc } from 'firebase/firestore'
 import { selectCartour, setCartour } from '../features/cartourSlice'
 import { setticket } from '../features/ticketSlice'
 
@@ -47,6 +47,8 @@ function HomeAccount({ isMenuOpen, setIsMenuOpen, }) {
   const cars = useSelector(selectCars)
   const tours = useSelector(selectCartour)
 
+  const [reloadData, setReloadData] = React.useState(false);
+
   const [dayTourSearch, setDayTourSearch] = React.useState(null);
 
 
@@ -66,89 +68,48 @@ function HomeAccount({ isMenuOpen, setIsMenuOpen, }) {
   useEffect(() => {
     const getDataCars = async () => {
       try {
-      let _cars=await getDocs(collection(db,'bus'))
-      _cars=_cars.docs.map(t => ({
-       ...t.data(),
-       id: t.id
-     }))
-     console.log('cars',_cars)
-         dispatch(setCars(_cars))
+        let _cars = await getDocs(collection(db, 'bus'))
+        _cars = _cars.docs.map(t => ({
+          ...t.data(),
+          id: t.id
+        }))
+        console.log('cars', _cars)
+        dispatch(setCars(_cars))
         setDataCars(_cars.reduce((obj, t) => ({
           ...obj,
           [t.maXe]: t
         }), {}));
-    //   try {
 
-    //     const response = await fetch(
-    //       `https://api-xe-khach.herokuapp.com/bus`);
-    //     console.log('response', response)
-
-    //     if (!response.ok) {
-    //       console.log('not ok')
-    //       throw new Error(
-    //         `This is an HTTP error: The status is ${response.status}`
-    //       );
-    //     }
-    //     console.log('ok')
-
-    //     let actualDataCars = await response.json();
-
-    //     console.log("DataCarsa1 " + actualDataCars)
-    //     dispatch(setCars(actualDataCars))
-    //     setDataCars(actualDataCars.reduce((obj, t) => ({
-    //       ...obj,
-    //       [t.maXe]: t
-    //     }), {}));
         setError(null);
 
-  } catch (err) {
-    setError(err.message);
-    setDataCars({});
-  } finally {
-    setLoading(false);
-  }
+      } catch (err) {
+        setError(err.message);
+        setDataCars({});
+      } finally {
+        setLoading(false);
+      }
     }
 
     getDataCars()
-  }, [])
+  }, [reloadData])
 
-    
+
   //get tour
   useEffect(() => {
     const getDataTour = async () => {
       try {
-        let _tour=await getDocs(collection(db,'tour'))
-      _tour=_tour.docs.map(t => ({
-       ...t.data(),
-       id: t.id
-     }))
-     console.log('tour',_tour)
-         dispatch(setCartour(_tour))
-         setDataTour(_tour.reduce((obj, t) => ({
+        let _tour = await getDocs(collection(db, 'tour'))
+        _tour = _tour.docs.map(t => ({
+          ...t.data(),
+          id: t.id
+        }))
+        console.log('tour', _tour)
+        dispatch(setCartour(_tour))
+        setDataTour(_tour.reduce((obj, t) => ({
           ...obj,
           [t.maCX]: t
         }), {}));
 
-    //     const response = await fetch(
-    //       `https://api-xe-khach.herokuapp.com/tour`);
-    //     console.log('response', response)
-
-    //     if (!response.ok) {
-    //       console.log('not ok')
-    //       throw new Error(
-    //         `This is an HTTP error: The status is ${response.status}`
-    //       );
-    //     }
-    //     console.log('ok')
-
-    //     let actualDataTour = await response.json();
-
-    //     console.log("DataToura1 " + actualDataTour)
-    //     dispatch(setCartour(actualDataTour))
-    //     setDataTour(actualDataTour.reduce((obj, t) => ({
-    //       ...obj,
-    //       [t.maCX]: t
-    //     }), {}));
         setError(null);
       } catch (err) {
         setError(err.message);
@@ -156,46 +117,27 @@ function HomeAccount({ isMenuOpen, setIsMenuOpen, }) {
       } finally {
         setLoading(false);
       }
-     }
+    }
     getDataTour()
-  }, [])
+  }, [reloadData])
 
 
   //get lộ trình
   useEffect(() => {
     const getDataRoute = async () => {
       try {
-        let _route=await getDocs(collection(db,'route'))
-        _route=_route.docs.map(t => ({
-         ...t.data(),
-         id: t.id
-       }))
-       console.log('route',_route)
-      //  dispatch(setDataRoute(_route))
-       setDataRoute(_route.reduce((obj, t) => ({
-        ...obj,
-        [t.ma]: t
-      }), {}));
-        // const response = await fetch(
-        //   `https://api-xe-khach.herokuapp.com/route`);
-        // console.log('response', response)
+        let _route = await getDocs(collection(db, 'route'))
+        _route = _route.docs.map(t => ({
+          ...t.data(),
+          id: t.id
+        }))
+        console.log('route', _route)
+        //  dispatch(setDataRoute(_route))
+        setDataRoute(_route.reduce((obj, t) => ({
+          ...obj,
+          [t.ma]: t
+        }), {}));
 
-        // if (!response.ok) {
-        //   console.log('not ok')
-        //   throw new Error(
-        //     `This is an HTTP error: The status is ${response.status}`
-        //   );
-        // }
-        // console.log('ok')
-
-        // let actualDataRoute = await response.json();
-
-        // console.log("DataRoutea1 " + actualDataRoute)
-        // // dispatch(setDataRoute(actualDataRoute))
-        // setDataRoute(actualDataRoute.reduce((obj, t) => ({
-        //   ...obj,
-        //   [t.ma]: t
-        // }), {}));
         setError(null);
       } catch (err) {
         setError(err.message);
@@ -224,36 +166,18 @@ function HomeAccount({ isMenuOpen, setIsMenuOpen, }) {
   // Get ticket API
   const [DataTicket, setDataTicket] = React.useState([]);
   //get Ticket
+  const [open, setOpen] = React.useState(false);
   useEffect(() => {
     const getDataTicket = async () => {
       try {
 
-        // const response = await fetch(
-        //   `https://api-xe-khach.herokuapp.com/ticket`);
-        // console.log('response', response)
+        let _ticket = await getDocs(collection(db, 'ticket'))
+        _ticket = _ticket.docs.map(t => ({
+          ...t.data(),
+          id: t.id
+        }))
+        console.log('ticket', _ticket)
 
-        // if (!response.ok) {
-        //   console.log('not ok')
-        //   throw new Error(
-        //     `This is an HTTP error: The status is ${response.status}`
-        //   );
-        // }
-        // console.log('ok')
-
-        // let actualDataTicket = await response.json();
-
-        // console.log("DataTicketa1 " + actualDataTicket)
-        let _ticket=await getDocs(collection(db,'ticket'))
-        _ticket=_ticket.docs.map(t => ({
-         ...t.data(),
-         id: t.id
-       }))
-       console.log('ticket',_ticket)
-      //  dispatch(setDataRoute(_route))
-      //  setDataRoute(_ticket.reduce((obj, t) => ({
-      //   ...obj,
-      //   [t.ma]: t
-      // }), {}));
         dispatch(setticket(_ticket))
         setDataTicket(_ticket);
         setError(null);
@@ -265,11 +189,11 @@ function HomeAccount({ isMenuOpen, setIsMenuOpen, }) {
       }
     }
     getDataTicket()
-  }, [])
+  }, [reloadData, open])
 
   //Lịch sử ticket
-  
-  const [open, setOpen] = React.useState(false);
+
+
   const handleOpen = () => {
     setOpen(true);
   };
@@ -277,9 +201,12 @@ function HomeAccount({ isMenuOpen, setIsMenuOpen, }) {
     setOpen(false);
   };
   //huy ve
-  const removeTicket = (maVe) =>()=>{
-    fetch(`https://api-xe-khach.herokuapp.com/ticket/${maVe}`, { method: 'DELETE' })
-        .then(() => toast.success('Hủy vé thành công!'));
+  const removeTicket = (id) => () => {
+    updateDoc(doc(db,'ticket',id),{
+      trangThai:-1
+    })
+    .then(() =>toast.success('Hủy vé thành công!'))
+    .catch(err => toast.error(err))
   }
 
   return (
@@ -298,12 +225,12 @@ function HomeAccount({ isMenuOpen, setIsMenuOpen, }) {
             </Link>
           </div>
           <div className='homeAccount__links'>
-            <Link to='/homeaccount' className={window.location.href.split('/')[3]=='homeaccount'&&'onclick_header__home'}>home</Link>
+            <Link to='/homeaccount' className={window.location.href.split('/')[3] == 'homeaccount' && 'onclick_header__home'}>home</Link>
             <Link to='/nhaxe'>nhà xe</Link>
             <Link to='/cartour'>chuyến xe</Link>
             <Link to='/contact'>Liên hệ</Link>
             <Link to='/account'>Tài khoản</Link>
-            <Link to='/admin'className={window.location.href.split('/')[3]=='admin'&&'onclick_header__Admin'}>Admin</Link>
+            <Link to='/admin' className={window.location.href.split('/')[3] == 'admin' && 'onclick_header__Admin'}>Admin</Link>
           </div>
           <div className='homeAccount__right'>
 
@@ -311,11 +238,11 @@ function HomeAccount({ isMenuOpen, setIsMenuOpen, }) {
               <img className='homeAccount__logoNation'
                 src={logoVN}
                 alt=''
-                onClick={()=>console.log(Object.keys(DataTour).filter(maCX =>
+                onClick={() => console.log(Object.keys(DataTour).filter(maCX =>
                   (!SelectedDataRoute || DataTour[maCX]?.maLT === DataRoute[SelectedDataRoute]?.ma) &&
                   (!dayTourSearch || DataTour[maCX]?.ngayDi === dayTourSearch.format('DD/MM/YYYY'))
                 ))}
-                />
+              />
 
               <img className='homeAccount__logoNation'
                 src={logoAnh}
@@ -384,7 +311,7 @@ function HomeAccount({ isMenuOpen, setIsMenuOpen, }) {
             (!dayTourSearch || DataTour[maCX]?.ngayDi === dayTourSearch.format('DD/MM/YYYY'))
           ).map(maCX => {// 
             const car = DataCars[DataTour[maCX]?.maXe]
-            console.log("test macx",DataCars[DataTour[maCX]?.maXe])
+            console.log("test macx", DataCars[DataTour[maCX]?.maXe])
             return (
               <Cars
                 key={maCX}
@@ -399,7 +326,8 @@ function HomeAccount({ isMenuOpen, setIsMenuOpen, }) {
                 tour={DataTour[maCX]}
 
                 DataTicket={DataTicket.filter((ticket) => ticket.trangThai !== -1)}
-
+                setReloadData={setReloadData}
+                reloadData={reloadData}
               // typeCar={car.Name}
               // infoText={car.Desc}
               // bookCar4
@@ -439,7 +367,7 @@ function HomeAccount({ isMenuOpen, setIsMenuOpen, }) {
 
         <Footer />
         <Modal
-        // style={{ overflow: "scroll" ,maxHeight: "100vh"}}
+          // style={{ overflow: "scroll" ,maxHeight: "100vh"}}
           classes={{
             root: "css-6z8jno"
           }}
@@ -449,11 +377,11 @@ function HomeAccount({ isMenuOpen, setIsMenuOpen, }) {
           aria-labelledby="child-modal-title"
           aria-describedby="child-modal-description"
         >
-          <Box sx={{  width: 200 }}>
+          <Box sx={{ width: 200 }}>
             {
 
             }
-            
+
             {
               DataTicket.filter((ticket) => ticket.email === user?.email).map(ticket =>
                 <div key={ticket.maVe}>
@@ -471,13 +399,13 @@ function HomeAccount({ isMenuOpen, setIsMenuOpen, }) {
                     Giá tiền: {DataTour[ticket.maCX]?.gia} VNĐ
                   </p>
                   <p id="child-modal-description">
-                    Trạng thái: {ticket.trangThai===1 ? "Đã đặt" : "Đã hủy"}
+                    Trạng thái: {ticket.trangThai === 1 ? "Đã đặt" : "Đã hủy"}
                   </p>
-                  {ticket.trangThai!==-1&&<button style={{backgroundColor : "red"}} onClick={removeTicket(ticket.maVe)}>Hủy</button>}
-                  
+                  {ticket.trangThai !== -1 && <button style={{ backgroundColor: "red" }} onClick={removeTicket(ticket.id)}>Hủy</button>}
+
                   <br />
                 </div>
-                
+
               )
             }
 

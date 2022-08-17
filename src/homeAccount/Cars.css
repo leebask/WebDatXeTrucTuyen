@@ -172,34 +172,34 @@ ol {
   margin: 0;
 }
 
-.seats {
+.cho_cho_seats {
   display: flex;
   flex-direction: row;
   flex-wrap: nowrap;
   justify-content: space-between;
 }
 
-.seat {
+.cho_seat {
   display: flex;
   flex: 0 0 14.2857142857%;
   padding: 5px;
   position: relative;
 }
 
-.seat:nth-child(3) {
+.cho_seat:nth-child(3) {
   margin-right: 14.2857142857%;
 }
 
-.seat input[type=checkbox] {
+.cho_seat input[type=checkbox] {
   position: absolute;
   opacity: 0;
 }
 
-.seat input[type=checkbox].unavailable+label {
+.cho_seat input[type=checkbox].unavailable+label {
   background-color: #808080;
 }
 
-.seat input[type=checkbox]:checked+label {
+.cho_seat input[type=checkbox]:checked+label {
   background: #bada55;
   -webkit-animation-name: rubberBand;
   animation-name: rubberBand;
@@ -207,13 +207,13 @@ ol {
   animation-fill-mode: both;
 }
 
-.seat input[type=checkbox]:disabled+label {
+.cho_seat input[type=checkbox]:disabled+label {
   background: #dddddd;
   text-indent: -9999px;
   overflow: hidden;
 }
 
-.seat input[type=checkbox]:disabled+label:after {
+.cho_seat input[type=checkbox]:disabled+label:after {
   content: "X";
   text-indent: 0;
   position: absolute;
@@ -222,12 +222,12 @@ ol {
   transform: translate(-50%, 0%);
 }
 
-.seat input[type=checkbox]:disabled+label:hover {
+.cho_seat input[type=checkbox]:disabled+label:hover {
   box-shadow: none;
   cursor: not-allowed;
 }
 
-.seat label {
+.cho_seat label {
   display: block;
   position: relative;
   width: 100%;
@@ -242,7 +242,7 @@ ol {
   animation-fill-mode: both;
 }
 
-.seat label:before {
+.cho_seat label:before {
   content: "";
   position: absolute;
   width: 75%;
@@ -254,7 +254,7 @@ ol {
   border-radius: 3px;
 }
 
-.seat label:hover {
+.cho_seat label:hover {
   cursor: pointer;
   box-shadow: 0 0 0px 2px #5c6aff;
 }

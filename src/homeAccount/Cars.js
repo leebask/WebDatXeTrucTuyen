@@ -36,6 +36,8 @@ import { useDispatch, useSelector } from 'react-redux'
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { setticket } from '../features/ticketSlice';
+import { addDoc, collection } from 'firebase/firestore';
+import { db } from '../firebase';
 
 const clsx = (...classNames) => classNames.filter(c => !!c).join(' ')
 
@@ -53,7 +55,7 @@ const style = {
   p: 4,
 };
 
-function Cars({ imgSrc, maXe, bienSo, loaiXe, soLuongGhe, gia, tour, DataTicket }) {
+function Cars({ imgSrc, maXe, bienSo, loaiXe, soLuongGhe, gia, tour, DataTicket, setReloadData, reloadData }) {
 
   const user = useSelector(selectUser)
 
@@ -154,16 +156,16 @@ function Cars({ imgSrc, maXe, bienSo, loaiXe, soLuongGhe, gia, tour, DataTicket 
       // const item = animals[i];
 
       content.push(<li className="row row--1">
-        <ol className="seats" type="A">
-          <li className="seat">
+        <ol className="cho_cho_seats" type="A">
+          <li className="cho_seat">
             <input className={clsx(DataTicket.some(t => t.maCX == tour.maCX && t.maGhe.split(',').map(g => g.trim()).includes(`${j}A`)) && 'unavailable')} type="checkbox" id={`${j}A`} onClick={addMaGhe} />
             <label for={`${j}A`}>{j}A</label>
           </li>
-          <li className="seat">
+          <li className="cho_seat">
             <input className={clsx(DataTicket.some(t => t.maCX == tour.maCX && t.maGhe.split(',').map(g => g.trim()).includes(`${j}B`)) && 'unavailable')} type="checkbox" id={`${j}B`} onClick={addMaGhe} />
             <label for={`${j}B`}>{j}B</label>
           </li>
-          <li className="seat">
+          <li className="cho_seat">
             <input className={clsx(DataTicket.some(t => t.maCX == tour.maCX && t.maGhe.split(',').map(g => g.trim()).includes(`${j}C`)) && 'unavailable')} type="checkbox" id={`${j}C`} onClick={addMaGhe} />
             <label for={`${j}C`}>{j}C</label>
           </li>
@@ -187,25 +189,33 @@ function Cars({ imgSrc, maXe, bienSo, loaiXe, soLuongGhe, gia, tour, DataTicket 
 
 
   const PostTicket = () => {
+    console.log({
+      maVe: DataTicket.reduce(function (accumulator, element) {
+        return (accumulator > element.maVe) ? accumulator : element.maVe
+      })+1,
+      maCX: tour.maCX,
+      tenKH: user.displayName,
+      email: user.email,
+      sdt: phoneNumber,
+      ngayDat: date,
+      maGhe: layMaGhe.join(','),
+      trangThai: 1,
+      ghiChu: "Đón tại" + " " + chonDiaDiem + ", " + " Ghi chú" + " " + ghiChu
+    })
 
-    // POST request using fetch inside useEffect React hook
-    const requestOptions = {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-
-        maCX: tour.maCX,
-        tenKH: user.displayName,
-        email: user.email,
-        sdt: phoneNumber,
-        ngayDat: date,
-        maGhe: layMaGhe.join(','),
-        trangThai: 1,
-        ghiChu: "Đón tại" + " " + chonDiaDiem + ", " + " Ghi chú" + " " + ghiChu
-      })
-    };
-    fetch('https://api-xe-khach.herokuapp.com/ticket', requestOptions)
-      .then(response => response.json())
+    addDoc(collection(db, 'ticket'), {
+      maVe: DataTicket.reduce(function (accumulator, element) {
+        return (accumulator > element.maVe) ? accumulator : element.maVe
+      })+1,
+      maCX: tour.maCX,
+      tenKH: user.displayName,
+      email: user.email,
+      sdt: phoneNumber,
+      ngayDat: date,
+      maGhe: layMaGhe.join(','),
+      trangThai: 1,
+      ghiChu: "Đón tại" + " " + chonDiaDiem + ", " + " Ghi chú" + " " + ghiChu
+    })
       .then(data => {
         setlayMaGhe([])
         setPhoneNumber(null)
@@ -214,10 +224,10 @@ function Cars({ imgSrc, maXe, bienSo, loaiXe, soLuongGhe, gia, tour, DataTicket 
         setCompleted({});
         setGhiChu()
         setChonDiaDiem()
-      });
+        setReloadData(!reloadData)
+      })
+      .catch((error) => toast.show(error))
 
-
-    // empty dependency array means this effect will only run once (like componentDidMount in classes)
   }
 
 
@@ -299,32 +309,32 @@ function Cars({ imgSrc, maXe, bienSo, loaiXe, soLuongGhe, gia, tour, DataTicket 
 
                                   {/* test trên */}
                                   {/* <li className="row row--1">
-                                    <ol className="seats" type="A">
-                                      <li className="seat">
+                                    <ol className="cho_cho_seats" type="A">
+                                      <li className="cho_seat">
                                         <input type="checkbox" id="1A" />
                                         <label for="1A">1A</label>
                                       </li>
-                                      <li className="seat">
+                                      <li className="cho_seat">
                                         <input type="checkbox" id="1B" />
                                         <label for="1B">1B</label>
                                       </li>
-                                      <li className="seat">
+                                      <li className="cho_seat">
                                         <input type="checkbox" id="1C" />
                                         <label for="1C">1C</label>
                                       </li>
                                     </ol>
                                   </li>
                                   <li className="row row--2">
-                                    <ol className="seats" type="A">
-                                      <li className="seat">
+                                    <ol className="cho_cho_seats" type="A">
+                                      <li className="cho_seat">
                                         <input type="checkbox" id="2A" />
                                         <label for="2A">2A</label>
                                       </li>
-                                      <li className="seat">
+                                      <li className="cho_seat">
                                         <input type="checkbox" id="2B" />
                                         <label for="2B">2B</label>
                                       </li>
-                                      <li className="seat">
+                                      <li className="cho_seat">
                                         <input type="checkbox" id="2C" />
                                         <label for="2C">2C</label>
                                       </li>
@@ -332,16 +342,16 @@ function Cars({ imgSrc, maXe, bienSo, loaiXe, soLuongGhe, gia, tour, DataTicket 
                                     </ol>
                                   </li>
                                   <li className="row row--3">
-                                    <ol className="seats" type="A">
-                                      <li className="seat">
+                                    <ol className="cho_cho_seats" type="A">
+                                      <li className="cho_seat">
                                         <input type="checkbox" id="3A" />
                                         <label for="3A">3A</label>
                                       </li>
-                                      <li className="seat">
+                                      <li className="cho_seat">
                                         <input type="checkbox" id="3B" />
                                         <label for="3B">3B</label>
                                       </li>
-                                      <li className="seat">
+                                      <li className="cho_seat">
                                         <input type="checkbox" id="3C" />
                                         <label for="3C">3C</label>
                                       </li>
