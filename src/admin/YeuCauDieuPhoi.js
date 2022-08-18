@@ -8,29 +8,29 @@ import { toast } from 'react-toastify';
 import {
   SearchOutlined
 } from '@ant-design/icons';
-import './User.css';
+import './YeuCauDieuPhoi.css';
 
 const { Option } = Select;
 
 
 
-function User() {
+function YeuCauDieuPhoi() {
 
-  const [DataUser, setDataUser] = useState([{}]);
+  const [DataYeuCauDieuPhoi, setDataYeuCauDieuPhoi] = useState([{}]);
 
   //get cars
   const dispatch = useDispatch()
   useEffect(() => {
-    const getDataUser = async () => {
+    const getDataYeuCauDieuPhoi = async () => {
       try {
-        let _user = await getDocs(collection(db, 'user'))
-        _user = _user.docs.map(t => ({
+        let _dieuphoi = await getDocs(collection(db, 'dispatcher'))
+        _dieuphoi = _dieuphoi.docs.map(t => ({
           ...t.data(),
           id: t.id
         }))
-        console.log('_user', _user)
-        dispatch(setCars(_user))
-        setDataUser(_user.map(
+        console.log('_dieuphoi', _dieuphoi)
+        dispatch(setCars(_dieuphoi))
+        setDataYeuCauDieuPhoi(_dieuphoi.map(
           (item) => {
             return {
               ...item,
@@ -43,45 +43,40 @@ function User() {
 
       } catch (err) {
         // setError(err.message);
-        setDataUser([]);
+        setDataYeuCauDieuPhoi([]);
 
       } finally {
         // setLoading(false);
       }
     }
 
-    getDataUser()
+    getDataYeuCauDieuPhoi()
   }, [])
     const columns = [
-        {
-          title: 'Uid',
-          dataIndex: 'uid',
-        },
+        
         {
           title: 'Email',
           dataIndex: 'email',
         },
         {
-          title: 'Họ',
-          dataIndex: 'ho',
+          title: 'Mã xe điều phối',
+          dataIndex: 'maCX',
         },
         {
-          title: 'Tên',
-          dataIndex: 'ten',
+          title: 'Ngày đi',
+          dataIndex: 'ngayDi',
         },
-         {
-          title: 'Số điện thoại',
-          dataIndex: 'sdt',
-        },
+        
         {
-          title: 'Phân quyền',
-          dataIndex: 'phanQuyen',
+          title: 'Trạng thái',
+          dataIndex: 'trangThai',
           render: (data, record) => {
             return (
                 <div
-                    style={{ textAlign: 'center', color: '#79aded', border: '1px solid #79aded' }}
+                    style={{ textAlign: 'center', border: '1px solid #79aded' }}
                 >
-                    {data == 1 ? <div style={{color:'red'}}>Admin</div>:"Khách hàng"} 
+                    {data == 1 ? <div style={{color:'green'}}>Chưa điều phối</div>
+                    :<div style={{color:'red'}}>Đã điều phối</div>} 
                 </div>
             );
         }
@@ -145,21 +140,18 @@ function User() {
     ],
   };
   return (
-    <div className='admin_user' style={{ padding: '36px 10px 10px 10px', width: '100%' }}>
+    <div className='admin_dieuphoi' style={{ padding: '36px 10px 10px 10px', width: '100%' }}>
             <div className='admin_tour_header'>
                 <Input placeholder="Tìm kiếm"  />
                 <Button type="secondary" ><SearchOutlined />Tìm</Button>
-                <Button type="primary">Thêm</Button>
-                <Button type="primary">Xem chi tiết</Button>
-                <Button type="primary">Cấp quyền</Button>
-
+                <Button type="primary">Xác nhận điều phối</Button>
 
             </div>
-            <Table rowSelection={rowSelection} columns={columns} dataSource={DataUser}
+            <Table rowSelection={rowSelection} columns={columns} dataSource={DataYeuCauDieuPhoi}
              pagination={{ defaultPageSize: 5, showSizeChanger: true, pageSizeOptions: ['5','10', '20', '30']}}
              />
         </div>
   )
 }
 
-export default User
+export default YeuCauDieuPhoi

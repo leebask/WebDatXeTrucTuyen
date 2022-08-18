@@ -27,6 +27,7 @@ import Tour from './Tour'
 import Routeeeee from './Route'
 import Ticket from './Ticket'
 import Logo from '../images/logo.png'
+import YeuCauDieuPhoi from './YeuCauDieuPhoi'
 
 
 function getItem(label, key, icon, children, type) {
@@ -83,13 +84,13 @@ const items = [
   //   getItem('Option 7', '7'),
   //   getItem('Option 8', '8'),
   // ]),
-  getItem(<Link to="/admin/ticket" style={{
+  getItem(<Link to="/admin/user" style={{
     fontWeight: 'bold',
     color: 'rgb(241 152 61)'
   }}>
     User
   </Link>, '5', <AppstoreOutlined />,),
-  getItem(<Link to="/admin/user" style={{
+  getItem(<Link to="/admin/yeucaudieuphoi" style={{
     fontWeight: 'bold',
     color: 'rgb(241 152 61)'
   }}>
@@ -168,6 +169,8 @@ function Admin() {
         <Route path="tour" element={<Tour />}></Route>
         <Route path="route" element={<Routeeeee />}></Route>
         <Route path="ticket" element={<Ticket />}></Route>
+        <Route path="yeucaudieuphoi" element={<YeuCauDieuPhoi />}></Route>
+
 
 
       </Routes>

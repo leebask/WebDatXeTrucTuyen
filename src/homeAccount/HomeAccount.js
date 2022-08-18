@@ -202,11 +202,11 @@ function HomeAccount({ isMenuOpen, setIsMenuOpen, }) {
   };
   //huy ve
   const removeTicket = (id) => () => {
-    updateDoc(doc(db,'ticket',id),{
-      trangThai:-1
+    updateDoc(doc(db, 'ticket', id), {
+      trangThai: -1
     })
-    .then(() =>toast.success('Hủy vé thành công!'))
-    .catch(err => toast.error(err))
+      .then(() => toast.success('Hủy vé thành công!'))
+      .catch(err => toast.error(err))
   }
 
   return (
@@ -267,6 +267,16 @@ function HomeAccount({ isMenuOpen, setIsMenuOpen, }) {
             <h4>{"Chào " + user?.displayName}</h4>
           </div>
           <div className="homeAccount__right">
+            <div style={{
+              texDecoration: 'none',
+              textTransform: 'uppercase',
+              color: 'black',
+              display: 'flex',
+              fontWeight: '500',
+              fontSize: '15px',
+              zIndex: '0',
+              position: 'relative'
+            }}>Yêu cầu điều phối xe</div>
             <Link to='' onClick={
               handleOpen
               // handleTestFirebase
@@ -416,7 +426,7 @@ function HomeAccount({ isMenuOpen, setIsMenuOpen, }) {
         </Modal>
 
       </div>
-    </LocalizationProvider>
+    </LocalizationProvider >
   )
 }
 

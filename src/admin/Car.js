@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { Button, Table, Modal, Input, Select } from 'antd';
 import { useDispatch } from 'react-redux';
 import { setCars } from '../features/carsSlice';
-import { collection, getDocs, onSnapshot, query, where } from 'firebase/firestore';
+import { addDoc, collection, doc, getDocs, onSnapshot, query, updateDoc, where } from 'firebase/firestore';
 import { db } from '../firebase';
 import './Car.css'
 import { toast } from 'react-toastify';
@@ -15,39 +15,7 @@ function Car() {
   const [DataCarsChecked, setDataCarsChecked] = useState();
   const [findWithMaXe, setFindWithMaXe] = useState();
 
-  
-
-  //them
-  const [isModalVisibleThem, setIsModalVisibleThem] = useState(false);
-
-  const showModalThem = () => {
-    setIsModalVisibleThem(true);
-  };
-
-  const handleOkThem = () => {
-    setIsModalVisibleThem(false);
-    toast.success('Thêm xe thành công!')
-  };
-
-  const handleCancelThem = () => {
-    setIsModalVisibleThem(false);
-  };
-  //sua 
-  const [isModalVisibleSua, setIsModalVisibleSua] = useState(false);
-
-  const showModalSua = () => {
-    setIsModalVisibleSua(true);
-  };
-
-  const handleOkSua = () => {
-    setIsModalVisibleSua(false);
-    toast.success('Sửa thông tin xe thành công!')
-
-  };
-
-  const handleCancelSua = () => {
-    setIsModalVisibleSua(false);
-  };
+  const [reloadData, setReloadData] = useState(false);
 
   //get cars
   const dispatch = useDispatch()
@@ -82,7 +50,86 @@ function Car() {
     }
 
     getDataCars()
-  }, [])
+  }, [reloadData])
+  //them
+  const [isModalVisibleThem, setIsModalVisibleThem] = useState(false);
+  const [addBienSo, setAddBienSo] = useState();
+  const [addLoaiXe, setAddLoaiXe] = useState();
+  const [addSoLuongGhe, setAddSoLuongGhe] = useState();
+  const [addGia, setAddGia] = useState();
+
+  const showModalThem = () => {
+    setIsModalVisibleThem(true);
+  };
+
+  const handleOkThem = () => {
+    if (addBienSo && addGia && addLoaiXe && addSoLuongGhe) {
+      addDoc(collection(db, 'bus'), {
+        maXe: DataCars.reduce(function (accumulator, element) {
+          return (accumulator > element.maXe) ? accumulator : element.maXe
+        }) + 1,
+        bienSo: addBienSo,
+        gia: Number(addGia),
+        loaiXe: addLoaiXe,
+        soLuongGhe: Number(addSoLuongGhe)
+      })
+        .then(data => {
+          setAddBienSo()
+          setAddLoaiXe()
+          toast.success("Thêm xe thành công!")
+          setAddSoLuongGhe();
+          setAddGia();
+          setIsModalVisibleThem(false);
+
+          setReloadData(!reloadData)
+        })
+        .catch((error) => toast.error(error))
+    } else toast.error('Vui lòng nhập đầy đủ thông tin!')
+  };
+
+  const handleCancelThem = () => {
+    setIsModalVisibleThem(false);
+  };
+  //sua 
+  const [isModalVisibleSua, setIsModalVisibleSua] = useState(false);
+  const [editBienSo, setEditBienSo] = useState();
+  const [editLoaiXe, setEditLoaiXe] = useState();
+  const [editSoLuongGhe, setEditSoLuongGhe] = useState();
+  const [editGia, setEditGia] = useState();
+  const showModalSua = () => {
+    setIsModalVisibleSua(true);
+  };
+
+  const handleOkSua = () => {
+    if (editBienSo && editGia && editLoaiXe && editSoLuongGhe) {
+    updateDoc(doc(db, 'bus', DataCarsChecked.id), {
+
+      bienSo: editBienSo,
+      gia: Number(editGia),
+      loaiXe: editLoaiXe,
+      soLuongGhe: Number(editSoLuongGhe)
+    })
+      .then(() => {
+        toast.success('Sửa thông tin xe thành công!')
+        setEditBienSo()
+        setEditLoaiXe()
+        setEditSoLuongGhe();
+        setEditGia();
+        setIsModalVisibleSua(false);
+
+        setReloadData(!reloadData)
+      })
+      .catch(err => toast.error(err))
+    } else toast.error('Vui lòng nhập đầy đủ thông tin!')
+
+
+  };
+
+  const handleCancelSua = () => {
+    setIsModalVisibleSua(false);
+  };
+
+
 
 
 
@@ -139,8 +186,13 @@ function Car() {
     onChange: (selectedRowKeys, selectedRows) => {
 
       console.log(selectedRowKeys, selectedRows)
-      if (selectedRows.length < 2)
+      if (selectedRows.length < 2){
         setDataCarsChecked(selectedRows[0])
+        setEditBienSo(selectedRows[0].bienSo)
+        setEditLoaiXe(selectedRows[0].loaiXe)
+        setEditSoLuongGhe(selectedRows[0].soLuongGhe)
+        setEditGia(selectedRows[0].gia)
+      }
       else toast.warning('Vui lòng chỉ chọn 1 xe!')
     },
     getCheckboxProps: (record) => ({
@@ -150,29 +202,41 @@ function Car() {
     })
   };
   const HandleSearch = (e) => {
-  //Query
-  onSnapshot(
-    query(
-      collection(db, 'bus'),where('maXe','==',Number(findWithMaXe))),(snapshot)=>{
-        let bus=[]
-        snapshot.docs.forEach(doc=>{
-          bus.push({...doc.data(),id:doc.id})
-        } )
+    //Query
+    onSnapshot(
+      query(
+        collection(db, 'bus'), where('maXe', '==', Number(findWithMaXe))), (snapshot) => {
+          let bus = []
+          snapshot.docs.forEach(doc => {
+            bus.push({ ...doc.data(), id: doc.id })
+          })
 
-        setDataCars(bus)
-      })
-      
+          setDataCars(bus)
+        })
+
     console.log(DataCars)
   }
+
   return (
     <div className='admin_car' style={{ padding: '36px 10px 10px 10px', width: '100%' }}>
       <div className='admin_tour_header'>
-        <Input placeholder="Tìm kiếm" onChange={(e)=>setFindWithMaXe(e.target.value)} />
+        <Input placeholder="Tìm kiếm" onChange={(e) => setFindWithMaXe(e.target.value)} />
         <Button type="secondary" onClick={HandleSearch}><SearchOutlined />Tìm</Button>
 
         <Button type="primary" onClick={showModalThem}>Thêm</Button>
         <Button type="primary" onClick={showModalSua}>Sửa</Button>
-        <Button type="primary" onClick={()=>toast.success("Xóa xe thành công!")}>Xóa</Button>
+        <Button type="primary" onClick={() =>
+          // toast.success("Xóa xe thành công!")
+          console.log({
+
+            bienSo: editBienSo,
+            gia: Number(editGia),
+            loaiXe: editLoaiXe,
+            soLuongGhe: Number(editSoLuongGhe)
+          },DataCarsChecked
+          )
+        }
+        >Xóa</Button>
 
       </div>
       <Table rowSelection={rowSelection} columns={columns} dataSource={DataCars}
@@ -190,20 +254,27 @@ function Car() {
             <p>Giá:</p>
           </div>
           <div>
-            <Input placeholder="Nhập biển số" />
+            <Input placeholder="Nhập biển số"
+              onChange={(e) => { setAddBienSo(e.target.value) }}
+              value={addBienSo}
+            />
             <Select
-              // defaultValue=""
+              placeholder="Chọn loại xe"
               style={{
                 width: 120,
               }}
-              onChange
+              onChange={(value, key) => { setAddLoaiXe(value) }}
             >
               <Option value="Giường nằm">Giường nằm</Option>
               <Option value="Ghế ngồi">Ghế ngồi</Option>
 
             </Select>
-            <Input type="number" placeholder="Nhập số lượng ghế" />
-            <Input type="number" placeholder="Nhập giá" />
+            <Input type="number" placeholder="Nhập số lượng ghế"
+              onChange={(e) => { setAddSoLuongGhe(e.target.value) }}
+              value={addSoLuongGhe}
+            />
+            <Input type="number" placeholder="Nhập giá" onChange={(e) => { setAddGia(e.target.value) }}
+              value={addGia} />
 
           </div>
         </div>
@@ -221,20 +292,26 @@ function Car() {
             <p>Giá:</p>
           </div>
           <div>
-            <Input placeholder="Nhập biển số" value={DataCarsChecked?.bienSo} />
+            <Input placeholder="Nhập biển số" value={editBienSo} 
+              onChange={(e) => { setEditBienSo(e.target.value) }}
+              />
             <Select
-              defaultValue={DataCarsChecked?.loaiXe}
+              defaultValue={editLoaiXe}
               style={{
                 width: 120,
               }}
-              onChange
+              onChange={(value, key) => { setEditLoaiXe(value) }}
+
             >
-              <Option value="Giường nằm">Giường nằm</Option>
+              <Option value="Giường nằm" >Giường nằm</Option>
               <Option value="Ghế ngồi">Ghế ngồi</Option>
 
             </Select>
-            <Input type="number" placeholder="Nhập số lượng ghế" value={DataCarsChecked?.soLuongGhe} />
-            <Input type="number" placeholder="Nhập giá" value={DataCarsChecked?.gia} />
+            <Input type="number" placeholder="Nhập số lượng ghế" value={editSoLuongGhe}
+              onChange={(e) => { setEditSoLuongGhe(e.target.value) }}
+              />
+            <Input type="number" placeholder="Nhập giá" value={editGia}
+            onChange={(e) => { setEditGia(e.target.value) }} />
 
           </div>
         </div>
