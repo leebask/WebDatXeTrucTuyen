@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { Avatar, Button, Table, Input, Select } from 'antd';
+import { Avatar, Button, Table, Input, Select, Modal } from 'antd';
 import { useDispatch } from 'react-redux';
 import { setCars } from '../features/carsSlice';
 import { collection, getDocs, onSnapshot, query, where } from 'firebase/firestore';
@@ -8,11 +8,27 @@ import './Ticket.css'
 import {
   SearchOutlined
 } from '@ant-design/icons';
+import { toast } from 'react-toastify';
+
+
+
 const { Option } = Select;
 
 function Ticket() {
   const [DataTicket, setDataTicket] = useState([{}]);
-  //get cars
+  const [isModalVisibleViewTK, setIsModalVisibleViewTK] = useState(false);
+  const [dataDetailTicket, setDataDetailTicket] = useState();
+
+  const showModalViewTK = () => {
+    setIsModalVisibleViewTK(true);
+  };
+  const handleOkViewTK = () => {
+    setIsModalVisibleViewTK(false)
+  }
+  const handleCancelViewTK = () => {
+    setIsModalVisibleViewTK(false);
+  };
+  //get ticket
   const dispatch = useDispatch()
   useEffect(() => {
     const getDataTicket = async () => {
@@ -148,44 +164,22 @@ function Ticket() {
     setSelectedRowKeys(newSelectedRowKeys);
   };
 
+
   const rowSelection = {
-    selectedRowKeys,
-    onChange: onSelectChange,
-    selections: [
-      Table.SELECTION_ALL,
-      Table.SELECTION_INVERT,
-      Table.SELECTION_NONE,
-      {
-        key: 'odd',
-        text: 'Select Odd Row',
-        onSelect: (changableRowKeys) => {
-          let newSelectedRowKeys = [];
-          newSelectedRowKeys = changableRowKeys.filter((_, index) => {
-            if (index % 2 !== 0) {
-              return false;
-            }
+    onChange: (selectedRowKeys, selectedRows) => {
 
-            return true;
-          });
-          setSelectedRowKeys(newSelectedRowKeys);
-        },
-      },
-      {
-        key: 'even',
-        text: 'Select Even Row',
-        onSelect: (changableRowKeys) => {
-          let newSelectedRowKeys = [];
-          newSelectedRowKeys = changableRowKeys.filter((_, index) => {
-            if (index % 2 !== 0) {
-              return true;
-            }
-
-            return false;
-          });
-          setSelectedRowKeys(newSelectedRowKeys);
-        },
-      },
-    ],
+      console.log(selectedRowKeys, selectedRows)
+      if (selectedRows.length < 2) {
+        setDataDetailTicket(selectedRows[0])
+        console.log(dataDetailTicket)
+      }
+      else toast.warning('Vui lòng chỉ chọn 1 vé!')
+    },
+    getCheckboxProps: (record) => ({
+      disabled: record.name === 'Disabled User',
+      // Column configuration not to be checked
+      name: record.name
+    })
   };
   const [findWithTicket, setFindWithTicket] = useState();
 
@@ -204,12 +198,14 @@ function Ticket() {
     console.log(findWithTicket)
   }
   return (
-    <div className='admin_car' style={{ padding: '36px 10px 10px 10px', width: '100%' }}>
+    <div className='admin_car' style={{ padding: '36px 2px 2px 2px', width: '100%' }}>
       <div className='admin_tour_header'>
         <Select
+          showSearch
           style={{ width: '400px !important' }}
           placeholder="Mã chuyến xe"
           onChange={(value, key) => { setFindWithTicket(value) }}
+          filterOption={(input, option) => option.children.toLowerCase().includes(input.toLowerCase())}
         >
           <Option key={1} value='CX01'>CX01</Option>
           <Option key={2} value='CX02'>CX02</Option>
@@ -218,12 +214,61 @@ function Ticket() {
 
         {/* <Button type="primary">Thêm</Button>
         <Button type="primary">Sửa</Button> */}
-        <Button type="primary">Xem chi tiết</Button>
+        <Button type="primary" onClick={showModalViewTK}>Xem chi tiết</Button>
 
       </div>
       <Table rowSelection={rowSelection} columns={columns} dataSource={DataTicket}
         pagination={{ defaultPageSize: 5, showSizeChanger: true, pageSizeOptions: ['5', '10', '20', '30'] }}
       />
+      <Modal title="Chi tiết vé"
+        visible={isModalVisibleViewTK}
+        onOk={handleOkViewTK}
+        onCancel={handleCancelViewTK}>
+        <div style={{ display: 'flex', flexDirection: 'row' }}>
+          <div style={{ width: '60%' }}>
+            <p>Mã vé:</p>
+            <p>Mã chuyến:</p>
+            <p>Mã ghế:</p>
+            <p>Tên:</p>
+
+            <p>Email:</p>
+            <p>SĐT:</p>
+            <p>Ngày đặt:</p>
+
+            <p>Ghi chú:</p>
+
+
+          </div>
+          <div>
+            <Input style={{ marginBottom: '2px' }}
+              value={dataDetailTicket?.maVe}
+            />
+            <Input style={{ marginBottom: '2px' }}
+              value={dataDetailTicket?.maCX}
+            />
+            <Input style={{ marginBottom: '2px' }}
+              value={dataDetailTicket?.maGhe}
+            />
+            <Input style={{ marginBottom: '2px' }}
+              value={dataDetailTicket?.tenKH}
+            />
+            <Input style={{ marginBottom: '2px' }}
+              value={dataDetailTicket?.email}
+            />
+            <Input style={{ marginBottom: '2px' }}
+              value={dataDetailTicket?.sdt}
+            />
+            <Input style={{ marginBottom: '2px' }}
+              value={dataDetailTicket?.tenKH}
+            />
+            <Input style={{ marginBottom: '2px' }}
+              value={dataDetailTicket?.ghiChu}
+            />
+
+
+          </div>
+        </div>
+      </Modal>
     </div>
   )
 }

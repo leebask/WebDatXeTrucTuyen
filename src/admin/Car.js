@@ -7,8 +7,10 @@ import { db } from '../firebase';
 import './Car.css'
 import { toast } from 'react-toastify';
 import {
-  SearchOutlined
-} from '@ant-design/icons';
+
+    SearchOutlined,PlusCircleOutlined,EditOutlined ,DeleteOutlined
+  } from '@ant-design/icons';
+
 const { Option } = Select;
 function Car() {
   const [DataCars, setDataCars] = useState([{}]);
@@ -223,9 +225,9 @@ function Car() {
         <Input placeholder="Tìm kiếm" onChange={(e) => setFindWithMaXe(e.target.value)} />
         <Button type="secondary" onClick={HandleSearch}><SearchOutlined />Tìm</Button>
 
-        <Button type="primary" onClick={showModalThem}>Thêm</Button>
-        <Button type="primary" onClick={showModalSua}>Sửa</Button>
-        <Button type="primary" onClick={() =>
+        <Button type="primary" onClick={showModalThem}><PlusCircleOutlined/>Thêm</Button>
+        <Button type="primary" onClick={showModalSua}><EditOutlined />Sửa</Button>
+        <Button danger onClick={() =>
           // toast.success("Xóa xe thành công!")
           console.log({
 
@@ -236,7 +238,7 @@ function Car() {
           },DataCarsChecked
           )
         }
-        >Xóa</Button>
+        ><DeleteOutlined />Xóa</Button>
 
       </div>
       <Table rowSelection={rowSelection} columns={columns} dataSource={DataCars}

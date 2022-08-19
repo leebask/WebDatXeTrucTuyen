@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { Button, Table, Modal, Input, Select } from 'antd';
 import { useDispatch } from 'react-redux';
 import { setCars } from '../features/carsSlice';
-import { collection, getDocs, onSnapshot, query, where } from 'firebase/firestore';
+import { collection, doc, getDocs, onSnapshot, query, updateDoc, where } from 'firebase/firestore';
 import { db } from '../firebase';
 import { toast } from 'react-toastify';
 import {
@@ -17,6 +17,8 @@ const { Option } = Select;
 function YeuCauDieuPhoi() {
 
   const [DataYeuCauDieuPhoi, setDataYeuCauDieuPhoi] = useState([{}]);
+  const [dataChecked, setDataChecked] = useState();
+  const [reload, setReload] = useState(false);
 
   //get cars
   const dispatch = useDispatch()
@@ -51,7 +53,7 @@ function YeuCauDieuPhoi() {
     }
 
     getDataYeuCauDieuPhoi()
-  }, [])
+  }, [reload])
     const columns = [
         
         {
@@ -84,14 +86,7 @@ function YeuCauDieuPhoi() {
       ];
       const data = [];
       
-      for (let i = 0; i < 46; i++) {
-        data.push({
-          key: i,
-          name: `Edward King ${i}`,
-          age: 32,
-          address: `London, Park Lane no. ${i}`,
-        });
-      }
+      
 
       const [selectedRowKeys, setSelectedRowKeys] = useState([]);
 
@@ -101,50 +96,54 @@ function YeuCauDieuPhoi() {
   };
 
   const rowSelection = {
-    selectedRowKeys,
-    onChange: onSelectChange,
-    selections: [
-      Table.SELECTION_ALL,
-      Table.SELECTION_INVERT,
-      Table.SELECTION_NONE,
-      {
-        key: 'odd',
-        text: 'Select Odd Row',
-        onSelect: (changableRowKeys) => {
-          let newSelectedRowKeys = [];
-          newSelectedRowKeys = changableRowKeys.filter((_, index) => {
-            if (index % 2 !== 0) {
-              return false;
-            }
+    onChange: (selectedRowKeys, selectedRows) => {
 
-            return true;
-          });
-          setSelectedRowKeys(newSelectedRowKeys);
-        },
-      },
-      {
-        key: 'even',
-        text: 'Select Even Row',
-        onSelect: (changableRowKeys) => {
-          let newSelectedRowKeys = [];
-          newSelectedRowKeys = changableRowKeys.filter((_, index) => {
-            if (index % 2 !== 0) {
-              return true;
-            }
-
-            return false;
-          });
-          setSelectedRowKeys(newSelectedRowKeys);
-        },
-      },
-    ],
+      console.log(selectedRowKeys, selectedRows)
+      if (selectedRows.length < 2) {
+        setDataChecked(selectedRows[0])
+        console.log(dataChecked)
+      }
+      else toast.warning('Vui lòng chỉ chọn 1 vé!')
+    },
+    getCheckboxProps: (record) => ({
+      disabled: record.name === 'Disabled User',
+      // Column configuration not to be checked
+      name: record.name
+    })
+  };
+  const ConFirmDieuPhoi = ()=>{
+    if (dataChecked?.trangThai !==0) {
+      updateDoc(doc(db, 'dispatcher', dataChecked.id), {
+        trangThai:0
+      })
+        .then(() => {
+          toast.success('Xác nhận điều phối xe thành công!')
+          setReload(!reload)
+        })
+        .catch(err => toast.error(err))
+      } else toast.error('Yêu cầu đã được xử lí rồi. Vui lòng chọn lại!')
+  
+  };
+  const DeleteDieuPhoi = ()=>{
+    if (dataChecked?.trangThai == 0) {
+      updateDoc(doc(db, 'dispatcher', dataChecked.id), {
+        trangThai:1
+      })
+        .then(() => {
+          toast.success('Hủy xác nhận điều phối xe thành công!')
+          setReload(!reload)
+        })
+        .catch(err => toast.error(err))
+      } else toast.error(' Vui lòng chọn lại yêu cầu chưa xác nhận điều phối!')
+  
   };
   return (
     <div className='admin_dieuphoi' style={{ padding: '36px 10px 10px 10px', width: '100%' }}>
             <div className='admin_tour_header'>
                 <Input placeholder="Tìm kiếm"  />
                 <Button type="secondary" ><SearchOutlined />Tìm</Button>
-                <Button type="primary">Xác nhận điều phối</Button>
+                <Button type="primary" ghost onClick={ConFirmDieuPhoi}>Xác nhận điều phối</Button>
+                <Button danger onClick={DeleteDieuPhoi}>Hủy điều phối</Button>
 
             </div>
             <Table rowSelection={rowSelection} columns={columns} dataSource={DataYeuCauDieuPhoi}

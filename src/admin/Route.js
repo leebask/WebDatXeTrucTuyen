@@ -6,7 +6,8 @@ import { collection, getDocs, onSnapshot, query, where } from 'firebase/firestor
 import { db } from '../firebase';
 import './Route.css'
 import {
-  SearchOutlined
+
+  SearchOutlined,PlusCircleOutlined,EditOutlined ,DeleteOutlined
 } from '@ant-design/icons';
 const { Option } = Select;
 
@@ -149,17 +150,19 @@ function Route() {
     <div className='admin_route' style={{ padding: '36px 10px 10px 10px', width: '100%' }}>
       <div className='admin_tour_header'>
         <Select
+        showSearch
           style={{ width: '400px !important' }}
           placeholder="Mã lộ trình"
           onChange={(value, key) => { setFindWithRoute(value) }}
+          filterOption={(input, option) => option.children.toLowerCase().includes(input.toLowerCase())}
         >
           <Option key={1} value='DakLak-SaiGon'>DakLak-SaiGon</Option>
           <Option key={2} value='SaiGon-DakLak'>SaiGon-DakLak</Option>
         </Select>
         <Button type="secondary" onClick={HandleSearch}><SearchOutlined />Tìm</Button>
-        <Button type="primary">Thêm</Button>
-        <Button type="primary">Sửa</Button>
-        <Button type="primary">Xóa</Button>
+        <Button type="primary"><PlusCircleOutlined/>Thêm</Button>
+        <Button type="primary"><EditOutlined />Sửa</Button>
+        <Button danger><DeleteOutlined />Xóa</Button>
 
       </div>
       <Table rowSelection={rowSelection} columns={columns} dataSource={DataRoute}

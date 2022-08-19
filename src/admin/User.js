@@ -2,11 +2,11 @@ import React, { useEffect, useState } from 'react'
 import { Button, Table, Modal, Input, Select } from 'antd';
 import { useDispatch } from 'react-redux';
 import { setCars } from '../features/carsSlice';
-import { collection, getDocs, onSnapshot, query, where } from 'firebase/firestore';
+import { collection, doc, getDocs, onSnapshot, query, updateDoc, where } from 'firebase/firestore';
 import { db } from '../firebase';
 import { toast } from 'react-toastify';
 import {
-  SearchOutlined
+  SearchOutlined,PlusCircleOutlined
 } from '@ant-design/icons';
 import './User.css';
 
@@ -17,8 +17,9 @@ const { Option } = Select;
 function User() {
 
   const [DataUser, setDataUser] = useState([{}]);
-
-  //get cars
+  const [dataChecked, setDataChecked] = useState();
+  const [reload, setReload] = useState(false);
+  //get user
   const dispatch = useDispatch()
   useEffect(() => {
     const getDataUser = async () => {
@@ -51,7 +52,7 @@ function User() {
     }
 
     getDataUser()
-  }, [])
+  }, [reload])
     const columns = [
         {
           title: 'Uid',
@@ -89,14 +90,7 @@ function User() {
       ];
       const data = [];
       
-      for (let i = 0; i < 46; i++) {
-        data.push({
-          key: i,
-          name: `Edward King ${i}`,
-          age: 32,
-          address: `London, Park Lane no. ${i}`,
-        });
-      }
+     
 
       const [selectedRowKeys, setSelectedRowKeys] = useState([]);
 
@@ -106,52 +100,56 @@ function User() {
   };
 
   const rowSelection = {
-    selectedRowKeys,
-    onChange: onSelectChange,
-    selections: [
-      Table.SELECTION_ALL,
-      Table.SELECTION_INVERT,
-      Table.SELECTION_NONE,
-      {
-        key: 'odd',
-        text: 'Select Odd Row',
-        onSelect: (changableRowKeys) => {
-          let newSelectedRowKeys = [];
-          newSelectedRowKeys = changableRowKeys.filter((_, index) => {
-            if (index % 2 !== 0) {
-              return false;
-            }
+    onChange: (selectedRowKeys, selectedRows) => {
 
-            return true;
-          });
-          setSelectedRowKeys(newSelectedRowKeys);
-        },
-      },
-      {
-        key: 'even',
-        text: 'Select Even Row',
-        onSelect: (changableRowKeys) => {
-          let newSelectedRowKeys = [];
-          newSelectedRowKeys = changableRowKeys.filter((_, index) => {
-            if (index % 2 !== 0) {
-              return true;
-            }
-
-            return false;
-          });
-          setSelectedRowKeys(newSelectedRowKeys);
-        },
-      },
-    ],
+      console.log(selectedRowKeys, selectedRows)
+      if (selectedRows.length < 2) {
+        setDataChecked(selectedRows[0])
+        console.log(dataChecked)
+      }
+      else toast.warning('Vui lòng chỉ chọn 1 vé!')
+    },
+    getCheckboxProps: (record) => ({
+      disabled: record.name === 'Disabled User',
+      // Column configuration not to be checked
+      name: record.name
+    })
+  };
+  const CapQuyen = ()=>{
+    if (dataChecked?.phanQuyen == 0) {
+      updateDoc(doc(db, 'user', dataChecked.id), {
+        phanQuyen:1
+      })
+        .then(() => {
+          toast.success('Nâng cấp quyền thành công!')
+          setReload(!reload)
+        })
+        .catch(err => toast.error(err))
+      } else toast.error(' User này đã là Admin!')
+  
+  };
+  const HaQuyen = ()=>{
+    if (dataChecked?.phanQuyen == 1) {
+      updateDoc(doc(db, 'user', dataChecked.id), {
+        phanQuyen:0
+      })
+        .then(() => {
+          toast.success('Hạ quyền thành công!')
+          setReload(!reload)
+        })
+        .catch(err => toast.error(err))
+      } else toast.error(' User này đã là khách hàng!')
+  
   };
   return (
     <div className='admin_user' style={{ padding: '36px 10px 10px 10px', width: '100%' }}>
             <div className='admin_tour_header'>
                 <Input placeholder="Tìm kiếm"  />
                 <Button type="secondary" ><SearchOutlined />Tìm</Button>
-                <Button type="primary">Thêm</Button>
+                <Button type="primary"><PlusCircleOutlined />Thêm</Button>
                 <Button type="primary">Xem chi tiết</Button>
-                <Button type="primary">Cấp quyền</Button>
+                <Button type="primary" ghost onClick={CapQuyen}>Cấp quyền</Button>
+                <Button danger onClick={HaQuyen}>Hạ quyền</Button>
 
 
             </div>

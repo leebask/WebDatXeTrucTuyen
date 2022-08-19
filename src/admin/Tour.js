@@ -7,8 +7,9 @@ import { db } from '../firebase';
 import { Divider } from '@mui/material';
 import './Tour.css'
 import {
-    SearchOutlined
-} from '@ant-design/icons';
+
+    SearchOutlined,PlusCircleOutlined,EditOutlined ,DeleteOutlined
+  } from '@ant-design/icons';
 function Tour() {
     const [DataTour, setDataTour] = useState([{}]);
     const [DataRoute, setDataRoute] = useState([{}]);
@@ -86,7 +87,7 @@ function Tour() {
         let arrCarNew = [];
         DataTour?.forEach((element) => {
             let object = {
-
+                key: element.id,
                 gia: element.gia,
                 id: element.id,
                 maCX: element.maCX,
@@ -230,9 +231,9 @@ function Tour() {
             <div className='admin_tour_header'>
                 <Input placeholder="Tìm kiếm" onChange={(e) => setFindWithCXe(e.target.value)} />
                 <Button type="secondary" onClick={HandleSearch}><SearchOutlined />Tìm</Button>
-                <Button type="primary">Thêm</Button>
-                <Button type="primary">Sửa</Button>
-                <Button type="primary">Xóa</Button>
+                <Button type="primary"><PlusCircleOutlined/>Thêm</Button>
+                <Button type="primary"><EditOutlined />Sửa</Button>
+                <Button danger><DeleteOutlined />Xóa</Button>
 
             </div>
             <Table rowSelection={rowSelection} columns={columns} dataSource={DataTour}
