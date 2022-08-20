@@ -6,10 +6,12 @@ import { addDoc, collection, doc, getDocs, onSnapshot, query, updateDoc, where }
 import { db } from '../firebase';
 import './Car.css'
 import { toast } from 'react-toastify';
+import { Excel } from "antd-table-saveas-excel";
+
 import {
 
-    SearchOutlined,PlusCircleOutlined,EditOutlined ,DeleteOutlined
-  } from '@ant-design/icons';
+  SearchOutlined, PlusCircleOutlined, EditOutlined, DeleteOutlined, ExportOutlined
+} from '@ant-design/icons';
 
 const { Option } = Select;
 function Car() {
@@ -104,24 +106,24 @@ function Car() {
 
   const handleOkSua = () => {
     if (editBienSo && editGia && editLoaiXe && editSoLuongGhe) {
-    updateDoc(doc(db, 'bus', DataCarsChecked.id), {
+      updateDoc(doc(db, 'bus', DataCarsChecked.id), {
 
-      bienSo: editBienSo,
-      gia: Number(editGia),
-      loaiXe: editLoaiXe,
-      soLuongGhe: Number(editSoLuongGhe)
-    })
-      .then(() => {
-        toast.success('Sửa thông tin xe thành công!')
-        setEditBienSo()
-        setEditLoaiXe()
-        setEditSoLuongGhe();
-        setEditGia();
-        setIsModalVisibleSua(false);
-
-        setReloadData(!reloadData)
+        bienSo: editBienSo,
+        gia: Number(editGia),
+        loaiXe: editLoaiXe,
+        soLuongGhe: Number(editSoLuongGhe)
       })
-      .catch(err => toast.error(err))
+        .then(() => {
+          toast.success('Sửa thông tin xe thành công!')
+          setEditBienSo()
+          setEditLoaiXe()
+          setEditSoLuongGhe();
+          setEditGia();
+          setIsModalVisibleSua(false);
+
+          setReloadData(!reloadData)
+        })
+        .catch(err => toast.error(err))
     } else toast.error('Vui lòng nhập đầy đủ thông tin!')
 
 
@@ -139,10 +141,13 @@ function Car() {
     {
       title: 'Mã xe',
       dataIndex: 'maXe',
+      key: 'maXe'
     },
     {
       title: 'Biển số',
       dataIndex: 'bienSo',
+      key: 'bienSo',
+
       render: (data, record) => {
         return (
           <div
@@ -157,14 +162,20 @@ function Car() {
       title: 'Số lượng ghế',
       dataIndex: 'soLuongGhe',
       width: '200px',
+      key: 'soLuongGhe'
+
     },
     {
       title: 'Loại xe',
       dataIndex: 'loaiXe',
+      key: 'loaiXe'
+
     },
     {
       title: 'Giá',
       dataIndex: 'gia',
+      key: 'gia',
+
       render: (data, record) => {
         return (
           <div
@@ -188,7 +199,7 @@ function Car() {
     onChange: (selectedRowKeys, selectedRows) => {
 
       console.log(selectedRowKeys, selectedRows)
-      if (selectedRows.length < 2){
+      if (selectedRows.length < 2) {
         setDataCarsChecked(selectedRows[0])
         setEditBienSo(selectedRows[0].bienSo)
         setEditLoaiXe(selectedRows[0].loaiXe)
@@ -219,14 +230,58 @@ function Car() {
     console.log(DataCars)
   }
 
+  const columnexport = [
+    {
+      title: 'Mã xe',
+      dataIndex: 'maXe',
+      key: 'maXe'
+    },
+    {
+      title: 'Biển số',
+      dataIndex: 'bienSo',
+      key: 'bienSo',
+
+    },
+    {
+      title: 'Số lượng ghế',
+      dataIndex: 'soLuongGhe',
+      key: 'soLuongGhe'
+
+    },
+    {
+      title: 'Loại xe',
+      dataIndex: 'loaiXe',
+      key: 'loaiXe'
+
+    },
+    {
+      title: 'Giá',
+      dataIndex: 'gia',
+      key: 'gia',
+    },
+  ];
+
+  const exportExcel = () => {
+    const excel = new Excel();
+    excel
+      .addSheet("Xe")
+      .addColumns(columnexport)
+      .addDataSource(DataCars, {
+        str2Percent: true
+      })
+      .saveAs("DanhSachXe.xlsx");
+    console.log(excel, "aa")
+  };
   return (
     <div className='admin_car' style={{ padding: '36px 10px 10px 10px', width: '100%' }}>
       <div className='admin_tour_header'>
         <Input placeholder="Tìm kiếm" onChange={(e) => setFindWithMaXe(e.target.value)} />
         <Button type="secondary" onClick={HandleSearch}><SearchOutlined />Tìm</Button>
 
-        <Button type="primary" onClick={showModalThem}><PlusCircleOutlined/>Thêm</Button>
+        <Button type="primary" onClick={showModalThem}><PlusCircleOutlined />Thêm</Button>
         <Button type="primary" onClick={showModalSua}><EditOutlined />Sửa</Button>
+        <Button type="primary" style={{ background: '#5ba75b', border: '1px solid greenyellow' }} onClick={exportExcel}><ExportOutlined />Xuất Excel</Button>
+
         <Button danger onClick={() =>
           // toast.success("Xóa xe thành công!")
           console.log({
@@ -235,7 +290,7 @@ function Car() {
             gia: Number(editGia),
             loaiXe: editLoaiXe,
             soLuongGhe: Number(editSoLuongGhe)
-          },DataCarsChecked
+          }, DataCarsChecked
           )
         }
         ><DeleteOutlined />Xóa</Button>
@@ -294,9 +349,9 @@ function Car() {
             <p>Giá:</p>
           </div>
           <div>
-            <Input placeholder="Nhập biển số" value={editBienSo} 
+            <Input placeholder="Nhập biển số" value={editBienSo}
               onChange={(e) => { setEditBienSo(e.target.value) }}
-              />
+            />
             <Select
               defaultValue={editLoaiXe}
               style={{
@@ -311,9 +366,9 @@ function Car() {
             </Select>
             <Input type="number" placeholder="Nhập số lượng ghế" value={editSoLuongGhe}
               onChange={(e) => { setEditSoLuongGhe(e.target.value) }}
-              />
+            />
             <Input type="number" placeholder="Nhập giá" value={editGia}
-            onChange={(e) => { setEditGia(e.target.value) }} />
+              onChange={(e) => { setEditGia(e.target.value) }} />
 
           </div>
         </div>

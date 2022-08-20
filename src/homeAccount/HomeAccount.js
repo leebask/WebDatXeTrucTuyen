@@ -41,6 +41,8 @@ import { ToastContainer, toast } from 'react-toastify';
 
 import 'react-toastify/dist/ReactToastify.css';
 import { doc, onSnapshot, query, where } from "firebase/firestore";
+import { PDFExport,savePDF  } from "@progress/kendo-react-pdf";
+
 function HomeAccount({ isMenuOpen, setIsMenuOpen, }) {
 
   const user = useSelector(selectUser)
@@ -208,7 +210,17 @@ function HomeAccount({ isMenuOpen, setIsMenuOpen, }) {
       .then(() => toast.success('Hủy vé thành công!'))
       .catch(err => toast.error(err))
   }
+  const exportPDF = (ticketID) => {
+    let element = document.getElementById(ticketID);
+    savePDF(element, {
+      paperSize: "auto",
+      margin: 40,
+      fileName: `VeXe ${ticketID}`,
 
+    });
+  };
+  const pdfExportComponent = React.useRef(null);
+  
   return (
     <LocalizationProvider dateAdapter={AdapterMoment}>
       <div className="homeAccount">
@@ -394,28 +406,36 @@ function HomeAccount({ isMenuOpen, setIsMenuOpen, }) {
 
             {
               DataTicket.filter((ticket) => ticket.email === user?.email).map(ticket =>
-                <div key={ticket.maVe}>
-                  <h2 id="child-modal-title">Mã vé:  {ticket.maVe}</h2>
-                  <p id="child-modal-description">
-                    Ngày đặt:  {ticket.ngayDat}
-                  </p>
-                  <p id="child-modal-description">
-                    Ngày đi: {DataTour[ticket.maCX]?.ngayDi}
-                  </p>
-                  <p id="child-modal-description">
-                    Mã ghế:  {ticket.maGhe}
-                  </p>
-                  <p id="child-modal-description">
-                    Giá tiền: {DataTour[ticket.maCX]?.gia} VNĐ
-                  </p>
-                  <p id="child-modal-description">
-                    Trạng thái: {ticket.trangThai === 1 ? "Đã đặt" : "Đã hủy"}
-                  </p>
-                  {ticket.trangThai !== -1 && <button style={{ backgroundColor: "red" }} onClick={removeTicket(ticket.id)}>Hủy</button>}
+                <div key={ticket.maVe} style={{fontFamily: '"DejaVu Sans", "Arial", sans-serif'}}>
+               <div id={ticket.maVe} >
+                    <h2 style={{color: "green"}} id="child-modal-title">Mã vé:  {ticket.maVe}</h2>
+                    <p id="child-modal-description">
+                      Ngày đặt:  {ticket.ngayDat}
+                    </p>
+                    <p id="child-modal-description">
+                      Ngày đi: {DataTour[ticket.maCX]?.ngayDi}
+                    </p>
+                    <p id="child-modal-description">
+                      Mã ghế:  {ticket.maGhe}
+                    </p>
+                    <p id="child-modal-description">
+                      Giá tiền: {DataTour[ticket.maCX]?.gia} VNĐ
+                    </p>
+                    <p id="child-modal-description">
+                      Trạng thái: {ticket.trangThai === 1 ? "Đã đặt" : "Đã hủy"}
+                    </p>
+                    </div>
+                    {ticket.trangThai !== -1 && <button 
+                    style={{ backgroundColor: "#faf21e", marginRight: '16px' }} 
+                    onClick={() =>exportPDF(ticket.maVe) }
+                    >In Vé</button>}
 
-                  <br />
-                </div>
+                    {ticket.trangThai !== -1 && <button style={{ backgroundColor: "red", color: 'white' }} onClick={removeTicket(ticket.id)}>Hủy</button>}
 
+                    <br />
+
+                  </div>
+              
               )
             }
 
