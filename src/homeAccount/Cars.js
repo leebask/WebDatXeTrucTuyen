@@ -192,7 +192,7 @@ function Cars({ imgSrc, maXe, bienSo, loaiXe, soLuongGhe, gia, tour, DataTicket,
     console.log({
       maVe: DataTicket.reduce(function (accumulator, element) {
         return (accumulator > element.maVe) ? accumulator : element.maVe
-      })+1,
+      }) + 1,
       maCX: tour.maCX,
       tenKH: user.displayName,
       email: user.email,
@@ -206,7 +206,7 @@ function Cars({ imgSrc, maXe, bienSo, loaiXe, soLuongGhe, gia, tour, DataTicket,
     addDoc(collection(db, 'ticket'), {
       maVe: DataTicket.reduce(function (accumulator, element) {
         return (accumulator > element.maVe) ? accumulator : element.maVe
-      })+1,
+      }) + 1,
       maCX: tour.maCX,
       tenKH: user.displayName,
       email: user.email,
@@ -359,12 +359,18 @@ function Cars({ imgSrc, maXe, bienSo, loaiXe, soLuongGhe, gia, tour, DataTicket,
                                     </ol>
                                   </li> */}
                                 </ol>
-                                <div className="exit exit--back fuselage">
 
+                                <div className="exit exit--back fuselage">
                                 </div>
                               </div>
                             </div>
                           </div>
+                          <div style={{
+                            border: '1px solid green',
+                            width: '158px',
+                            borderRadius: '5px',
+                          }}>Yêu cầu điều phối xe</div>
+
                         </div>
                         : ""}
                       {(activeStep + 1) == 2 ?
