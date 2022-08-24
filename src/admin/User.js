@@ -146,8 +146,8 @@ function User() {
             <div className='admin_tour_header'>
                 <Input placeholder="Tìm kiếm"  />
                 <Button type="secondary" ><SearchOutlined />Tìm</Button>
-                <Button type="primary"><PlusCircleOutlined />Thêm</Button>
-                <Button type="primary">Xem chi tiết</Button>
+                {/* <Button type="primary"><PlusCircleOutlined />Thêm</Button> */}
+                {/* <Button type="primary">Xem chi tiết</Button> */}
                 <Button type="primary" ghost onClick={CapQuyen}>Cấp quyền</Button>
                 <Button danger onClick={HaQuyen}>Hạ quyền</Button>
 

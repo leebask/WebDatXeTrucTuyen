@@ -447,7 +447,16 @@ function xoa_dau(str) {
                    {/* Dùng để in */}
                    <div  id={ticket.maVe} >
                     <h2 style={{ color: "green" }} id="child-modal-title">MA VE:  {ticket.maVe}</h2>
-                    <p id="child-modal-description">
+                    <p id="child-modal-description" onClick={() =>console.log(ticket)}>
+                      Ma chuyen:  {ticket.maCX}
+                    </p>
+                    <p id="child-modal-description" onClick={() =>console.log(ticket)}>
+                      Email:  {ticket.email}
+                    </p>
+                    <p id="child-modal-description" onClick={() =>console.log(ticket)}>
+                      SDT:  {ticket.sdt}
+                    </p>
+                    <p id="child-modal-description" onClick={() =>console.log(ticket)}>
                       Ngay dat:  {ticket.ngayDat}
                     </p>
                     <p id="child-modal-description">

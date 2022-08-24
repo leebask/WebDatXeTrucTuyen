@@ -6,10 +6,11 @@ import { collection, getDocs, onSnapshot, query, where } from 'firebase/firestor
 import { db } from '../firebase';
 import './Ticket.css'
 import {
-  SearchOutlined
+  SearchOutlined,ExportOutlined
 } from '@ant-design/icons';
 import { toast } from 'react-toastify';
 
+import { Excel } from "antd-table-saveas-excel";
 
 
 const { Option } = Select;
@@ -18,6 +19,7 @@ function Ticket() {
   const [DataTicket, setDataTicket] = useState([{}]);
   const [isModalVisibleViewTK, setIsModalVisibleViewTK] = useState(false);
   const [dataDetailTicket, setDataDetailTicket] = useState();
+  const [dataDetailTicketSelect, setDataDetailTicketSelect] = useState();
 
   const showModalViewTK = () => {
     setIsModalVisibleViewTK(true);
@@ -40,6 +42,7 @@ function Ticket() {
         }))
         console.log('_ticket', _ticket)
         dispatch(setCars(_ticket))
+        setDataDetailTicketSelect(_ticket)
         setDataTicket(_ticket.map(
           (item) => {
             return {
@@ -154,7 +157,42 @@ function Ticket() {
 
   ];
   const data = [];
+  const columnexport = [
+    {
+      title: 'Mã vé',
+      dataIndex: 'maVe',
+    },
+    {
+      title: 'Mã chuyến xe',
+      dataIndex: 'maCX',
+    },
+    {
+      title: 'Mã ghế',
+      dataIndex: 'maGhe',
+    },
+    {
+      title: 'Email',
+      dataIndex: 'email',
+    },
+    {
+      title: 'Điện thoại',
+    },
+    {
+      title: 'Tên',
+      dataIndex: 'tenKH',
+    },
+    {
+      title: 'Trạng thái',
+      dataIndex: 'trangThai',
+     
+    },
 
+    {
+      title: 'Ghi chú',
+      dataIndex: 'ghiChu',
+    },
+
+  ];
 
 
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
@@ -197,6 +235,19 @@ function Ticket() {
         })
     console.log(findWithTicket)
   }
+
+  const exportExcel = () => {
+    const excel = new Excel();
+    excel
+      .addSheet("Vexe")
+      .addColumns(columnexport)
+      .addDataSource(DataTicket, {
+        str2Percent: true
+      })
+      .saveAs("DanhSachVeXe.xlsx");
+    console.log(excel, "aa")
+
+  };
   return (
     <div className='admin_car' style={{ padding: '36px 2px 2px 2px', width: '100%' }}>
       <div className='admin_tour_header'>
@@ -207,15 +258,22 @@ function Ticket() {
           onChange={(value, key) => { setFindWithTicket(value) }}
           filterOption={(input, option) => option.children.toLowerCase().includes(input.toLowerCase())}
         >
-          <Option key={1} value='CX01'>CX01</Option>
-          <Option key={2} value='CX02'>CX02</Option>
+          {dataDetailTicketSelect?.map(k=>k.maCX)?.filter((item,index)=>dataDetailTicketSelect?.map(k=>k.maCX).indexOf(item)==index)?.map((k,key)=>
+          <Option key={key} value={k}>{k}</Option>
+          )}
+          {/* <Option key={1} value='CX01'>CX01</Option>
+          <Option key={2} value='CX02'>CX02</Option> */}
         </Select>
         <Button type="secondary" onClick={HandleSearch}><SearchOutlined />Tìm</Button>
 
         {/* <Button type="primary">Thêm</Button>
         <Button type="primary">Sửa</Button> */}
-        <Button type="primary" onClick={showModalViewTK}>Xem chi tiết</Button>
-
+        <Button type="primary" onClick={
+          showModalViewTK
+          }>Xem chi tiết</Button>
+        <Button type="primary" style={{ background: '#5ba75b', border: '1px solid greenyellow' }}
+                 onClick={exportExcel}
+                ><ExportOutlined />Xuất Excel</Button>
       </div>
       <Table rowSelection={rowSelection} columns={columns} dataSource={DataTicket}
         pagination={{ defaultPageSize: 5, showSizeChanger: true, pageSizeOptions: ['5', '10', '20', '30'] }}

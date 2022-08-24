@@ -230,7 +230,26 @@ function Cars({ imgSrc, maXe, bienSo, loaiXe, soLuongGhe, gia, tour, DataTicket,
 
   }
 
-
+  const handleYeuCauDieuPhoi = () => {
+   
+      addDoc(collection(db, 'dispatcher'), {
+        maCX:tour.maCX,
+        email:user.email,
+        ngayDi:tour?.ngayDi,
+        trangThai: 1
+      })
+        .then(data => {
+          
+          toast.success("Yêu cầu điều phối thành công!")
+        })
+        .catch((error) => toast.error(error))
+      console.log( {
+        maCX:tour.maCX,
+        email:user.email,
+        ngayDi:tour?.ngayDi,
+        trangThai: 1
+      })
+  }
   return (
     <div className="cars">
 
@@ -365,10 +384,11 @@ function Cars({ imgSrc, maXe, bienSo, loaiXe, soLuongGhe, gia, tour, DataTicket,
                               </div>
                             </div>
                           </div>
-                          <div style={{
+                          <div onClick={handleYeuCauDieuPhoi} style={{
                             border: '1px solid green',
                             width: '158px',
                             borderRadius: '5px',
+                            cursor: 'pointer',
                           }}>Yêu cầu điều phối xe</div>
 
                         </div>

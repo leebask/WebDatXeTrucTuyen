@@ -2,11 +2,11 @@ import React, { useEffect, useState } from 'react'
 import { Button, Table, Modal, Input, Select } from 'antd';
 import { useDispatch } from 'react-redux';
 import { setCars } from '../features/carsSlice';
-import { collection, doc, getDocs, onSnapshot, query, updateDoc, where } from 'firebase/firestore';
+import { collection, deleteDoc, doc, getDocs, onSnapshot, query, updateDoc, where } from 'firebase/firestore';
 import { db } from '../firebase';
 import { toast } from 'react-toastify';
 import {
-  SearchOutlined
+  SearchOutlined,DeleteOutlined
 } from '@ant-design/icons';
 import './YeuCauDieuPhoi.css';
 
@@ -137,6 +137,19 @@ function YeuCauDieuPhoi() {
       } else toast.error(' Vui lòng chọn lại yêu cầu chưa xác nhận điều phối!')
   
   };
+  
+const handleXoaDieuPhoi = ()=>{
+  if(dataChecked?.trangThai == 0){
+    deleteDoc(doc(db,'dispatcher',dataChecked.id))
+    .then(() =>{
+      setReload(!reload)
+     toast.success("Xóa yêu cầu điều phối thành công!")
+    })
+    .catch(err => toast.error(err))
+ }else toast.error("Vui lòng xử lí yêu cầu trước khi xóa!")
+}
+
+  
   return (
     <div className='admin_dieuphoi' style={{ padding: '36px 10px 10px 10px', width: '100%' }}>
             <div className='admin_tour_header'>
@@ -144,6 +157,8 @@ function YeuCauDieuPhoi() {
                 <Button type="secondary" ><SearchOutlined />Tìm</Button>
                 <Button type="primary" ghost onClick={ConFirmDieuPhoi}>Xác nhận điều phối</Button>
                 <Button danger onClick={DeleteDieuPhoi}>Hủy điều phối</Button>
+                <Button danger onClick={handleXoaDieuPhoi}
+        ><DeleteOutlined />Xóa</Button>
 
             </div>
             <Table rowSelection={rowSelection} columns={columns} dataSource={DataYeuCauDieuPhoi}

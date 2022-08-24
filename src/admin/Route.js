@@ -1,19 +1,24 @@
 import React, { useEffect, useState } from 'react'
-import { Avatar, Button, Table, Input, Select } from 'antd';
+import { Avatar, Button, Table, Input, Select, Modal } from 'antd';
 import { useDispatch } from 'react-redux';
 import { setCars } from '../features/carsSlice';
-import { collection, getDocs, onSnapshot, query, where } from 'firebase/firestore';
+import { addDoc, collection, getDocs, onSnapshot, query, where } from 'firebase/firestore';
 import { db } from '../firebase';
 import './Route.css'
 import {
 
-  SearchOutlined,PlusCircleOutlined,EditOutlined ,DeleteOutlined
+  SearchOutlined, PlusCircleOutlined, EditOutlined, DeleteOutlined
 } from '@ant-design/icons';
+import moment from 'moment';
+import { toast } from 'react-toastify';
 const { Option } = Select;
 
 function Route() {
   const [DataRoute, setDataRoute] = useState([{}]);
-  //get cars
+  const [reloadData, setReloadData] = useState(false);
+  const [DataRouteSelectSearch, setDataRouteSelectSearch] = useState([{}]);
+
+  //get route
   const dispatch = useDispatch()
   useEffect(() => {
     const getDataCars = async () => {
@@ -25,6 +30,7 @@ function Route() {
         }))
         console.log('_route', _route)
         //  dispatch(setCars(_route))
+        setDataRouteSelectSearch(_route)
         setDataRoute(_route.map(
           (item) => {
             return {
@@ -46,7 +52,7 @@ function Route() {
     }
 
     getDataCars()
-  }, [])
+  }, [reloadData])
 
 
 
@@ -146,21 +152,59 @@ function Route() {
         })
     console.log(findWithRoute)
   }
+
+  //them
+  const [isModalVisibleThem, setIsModalVisibleThem] = useState(false);
+  const [maLTAdd, setMaLTAdd] = useState()
+  const [noiDiAdd, setNoiDiAdd] = useState()
+  const [noiDenAdd, setNoiDenAdd] = useState()
+  const [khoangCachAdd, setKhoangCachAdd] = useState()
+
+  const showModalThem = () => {
+    setIsModalVisibleThem(true);
+  };
+  const handleOkThem = () => {
+    if (maLTAdd && noiDiAdd && noiDenAdd && khoangCachAdd) {
+      addDoc(collection(db, 'route'), {
+        ma: maLTAdd,
+        noiDi: noiDiAdd,
+        noiDen: noiDenAdd,
+        khoangCach: khoangCachAdd,
+      })
+        .then(data => {
+          setMaLTAdd()
+          setNoiDiAdd()
+          toast.success("Thêm lộ trình thành công!")
+          setNoiDenAdd();
+          setKhoangCachAdd();
+          setIsModalVisibleThem(false);
+
+          setReloadData(!reloadData)
+        })
+        .catch((error) => toast.error(error))
+    } else toast.error('Vui lòng nhập đầy đủ thông tin!')
+  };
+  const handleCancelThem = () => {
+    setIsModalVisibleThem(false);
+  };
   return (
     <div className='admin_route' style={{ padding: '36px 10px 10px 10px', width: '100%' }}>
       <div className='admin_tour_header'>
         <Select
-        showSearch
+          showSearch
           style={{ width: '400px !important' }}
           placeholder="Mã lộ trình"
           onChange={(value, key) => { setFindWithRoute(value) }}
           filterOption={(input, option) => option.children.toLowerCase().includes(input.toLowerCase())}
         >
-          <Option key={1} value='DakLak-SaiGon'>DakLak-SaiGon</Option>
-          <Option key={2} value='SaiGon-DakLak'>SaiGon-DakLak</Option>
+          {DataRouteSelectSearch.map((k,key) => (
+            <Option key={key} value={k.ma}>{k.ma}</Option>
+          ))}
+          {/* <Option key={1} value='DakLak-SaiGon'>DakLak-SaiGon</Option>
+          <Option key={2} value='SaiGon-DakLak'>SaiGon-DakLak</Option> */}
         </Select>
         <Button type="secondary" onClick={HandleSearch}><SearchOutlined />Tìm</Button>
-        <Button type="primary"><PlusCircleOutlined/>Thêm</Button>
+        <Button type="primary"onClick={showModalThem} ><PlusCircleOutlined />Thêm</Button>
         <Button type="primary"><EditOutlined />Sửa</Button>
         <Button danger><DeleteOutlined />Xóa</Button>
 
@@ -168,6 +212,43 @@ function Route() {
       <Table rowSelection={rowSelection} columns={columns} dataSource={DataRoute}
         pagination={{ defaultPageSize: 5, showSizeChanger: true, pageSizeOptions: ['5', '10', '20', '30'] }}
       />
+      <Modal title="Thêm mới chuyến xe"
+        visible={isModalVisibleThem}
+        onOk={handleOkThem}
+        onCancel={handleCancelThem}>
+        <div>
+          <div>
+            <div>
+              <div> Mã lộ trình:</div>
+              <Input placeholder="Mã lộ trình"
+                onChange={(e) => { setMaLTAdd(e.target.value) }}
+                value={maLTAdd}
+              />
+            </div>
+            <div>
+              <div> Nơi đi:</div>
+              <Input placeholder="Nơi đi"
+                onChange={(e) => { setNoiDiAdd(e.target.value) }}
+                value={noiDiAdd}
+              />
+            </div>
+            <div>
+              <div> Nơi đến:</div>
+              <Input placeholder="Nơi đến"
+                onChange={(e) => { setNoiDenAdd(e.target.value) }}
+                value={noiDenAdd}
+              />
+            </div>
+            <div>
+              <div>Khoảng cách:</div>
+              <Input placeholder="Khoảng cách"
+                onChange={(e) => {setKhoangCachAdd(e.target.value) }}
+                value={khoangCachAdd}
+              />
+            </div>
+          </div>
+        </div>
+      </Modal >
     </div>
   )
 }
