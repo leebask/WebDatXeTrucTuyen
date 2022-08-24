@@ -41,7 +41,7 @@ import { ToastContainer, toast } from 'react-toastify';
 
 import 'react-toastify/dist/ReactToastify.css';
 import { doc, onSnapshot, query, where } from "firebase/firestore";
-import { PDFExport,savePDF  } from "@progress/kendo-react-pdf";
+import { PDFExport, savePDF } from "@progress/kendo-react-pdf";
 
 function HomeAccount({ isMenuOpen, setIsMenuOpen, }) {
 
@@ -210,17 +210,36 @@ function HomeAccount({ isMenuOpen, setIsMenuOpen, }) {
       .then(() => toast.success('Hủy vé thành công!'))
       .catch(err => toast.error(err))
   }
+  
+function xoa_dau(str) {
+  str = str.replace(/à|á|ạ|ả|ã|â|ầ|ấ|ậ|ẩ|ẫ|ă|ằ|ắ|ặ|ẳ|ẵ/g, "a");
+  str = str.replace(/è|é|ẹ|ẻ|ẽ|ê|ề|ế|ệ|ể|ễ/g, "e");
+  str = str.replace(/ì|í|ị|ỉ|ĩ/g, "i");
+  str = str.replace(/ò|ó|ọ|ỏ|õ|ô|ồ|ố|ộ|ổ|ỗ|ơ|ờ|ớ|ợ|ở|ỡ/g, "o");
+  str = str.replace(/ù|ú|ụ|ủ|ũ|ư|ừ|ứ|ự|ử|ữ/g, "u");
+  str = str.replace(/ỳ|ý|ỵ|ỷ|ỹ/g, "y");
+  str = str.replace(/đ/g, "d");
+  str = str.replace(/À|Á|Ạ|Ả|Ã|Â|Ầ|Ấ|Ậ|Ẩ|Ẫ|Ă|Ằ|Ắ|Ặ|Ẳ|Ẵ/g, "A");
+  str = str.replace(/È|É|Ẹ|Ẻ|Ẽ|Ê|Ề|Ế|Ệ|Ể|Ễ/g, "E");
+  str = str.replace(/Ì|Í|Ị|Ỉ|Ĩ/g, "I");
+  str = str.replace(/Ò|Ó|Ọ|Ỏ|Õ|Ô|Ồ|Ố|Ộ|Ổ|Ỗ|Ơ|Ờ|Ớ|Ợ|Ở|Ỡ/g, "O");
+  str = str.replace(/Ù|Ú|Ụ|Ủ|Ũ|Ư|Ừ|Ứ|Ự|Ử|Ữ/g, "U");
+  str = str.replace(/Ỳ|Ý|Ỵ|Ỷ|Ỹ/g, "Y");
+  str = str.replace(/Đ/g, "D");
+  return str;
+}
   const exportPDF = (ticketID) => {
     let element = document.getElementById(ticketID);
+    // xoa_dau(element.toString())
     savePDF(element, {
       paperSize: "auto",
       margin: 40,
       fileName: `VeXe ${ticketID}`,
 
     });
+    console.log(element);
   };
-  const pdfExportComponent = React.useRef(null);
-  
+
   return (
     <LocalizationProvider dateAdapter={AdapterMoment}>
       <div className="homeAccount">
@@ -393,7 +412,7 @@ function HomeAccount({ isMenuOpen, setIsMenuOpen, }) {
           classes={{
             root: "css-6z8jno"
           }}
-          hideBackdrop
+          // hideBackdrop
           open={open}
           onClose={handleClose}
           aria-labelledby="child-modal-title"
@@ -406,9 +425,9 @@ function HomeAccount({ isMenuOpen, setIsMenuOpen, }) {
 
             {
               DataTicket.filter((ticket) => ticket.email === user?.email).map(ticket =>
-                <div key={ticket.maVe} style={{fontFamily: '"DejaVu Sans", "Arial", sans-serif'}}>
-               <div id={ticket.maVe} >
-                    <h2 style={{color: "green"}} id="child-modal-title">Mã vé:  {ticket.maVe}</h2>
+                <div key={ticket.maVe} style={{ fontFamily: '"DejaVu Sans", "Arial", sans-serif' }}>
+                  {/* <div >
+                    <h2 style={{ color: "green" }} id="child-modal-title">Mã vé:  {ticket.maVe}</h2>
                     <p id="child-modal-description">
                       Ngày đặt:  {ticket.ngayDat}
                     </p>
@@ -424,18 +443,37 @@ function HomeAccount({ isMenuOpen, setIsMenuOpen, }) {
                     <p id="child-modal-description">
                       Trạng thái: {ticket.trangThai === 1 ? "Đã đặt" : "Đã hủy"}
                     </p>
-                    </div>
-                    {ticket.trangThai !== -1 && <button 
-                    style={{ backgroundColor: "#faf21e", marginRight: '16px' }} 
-                    onClick={() =>exportPDF(ticket.maVe) }
-                    >In Vé</button>}
-
-                    {ticket.trangThai !== -1 && <button style={{ backgroundColor: "red", color: 'white' }} onClick={removeTicket(ticket.id)}>Hủy</button>}
-
-                    <br />
-
+                  </div> */}
+                   {/* Dùng để in */}
+                   <div  id={ticket.maVe} >
+                    <h2 style={{ color: "green" }} id="child-modal-title">MA VE:  {ticket.maVe}</h2>
+                    <p id="child-modal-description">
+                      Ngay dat:  {ticket.ngayDat}
+                    </p>
+                    <p id="child-modal-description">
+                      Ngay di: {DataTour[ticket.maCX]?.ngayDi}
+                    </p>
+                    <p id="child-modal-description">
+                      Ma ghe:  {ticket.maGhe}
+                    </p>
+                    <p id="child-modal-description">
+                      Gia tien: {DataTour[ticket.maCX]?.gia} VND
+                    </p>
+                    <p id="child-modal-description">
+                      Trang thai: {ticket.trangThai === 1 ? "Da dat" : "Da huy"}
+                    </p>
                   </div>
-              
+                  {ticket.trangThai !== -1 && <button
+                    style={{ backgroundColor: "#faf21e", marginRight: '16px' }}
+                    onClick={() => exportPDF(ticket.maVe)}
+                  >In Vé</button>}
+
+                  {ticket.trangThai !== -1 && <button style={{ backgroundColor: "red", color: 'white' }} onClick={removeTicket(ticket.id)}>Hủy</button>}
+
+                  <br />
+                 
+                </div>
+
               )
             }
 

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { Button, Table, Modal, Input, Select } from 'antd';
 import { useDispatch } from 'react-redux';
 import { setCars } from '../features/carsSlice';
-import { addDoc, collection, doc, getDocs, onSnapshot, query, updateDoc, where } from 'firebase/firestore';
+import { addDoc, collection, deleteDoc, doc, getDocs, onSnapshot, query, updateDoc, where } from 'firebase/firestore';
 import { db } from '../firebase';
 import './Car.css'
 import { toast } from 'react-toastify';
@@ -55,6 +55,41 @@ function Car() {
 
     getDataCars()
   }, [reloadData])
+
+  //get tour
+  const [DataTour, setDataTour] = useState([{}]);
+  useEffect(() => {
+    const getDataCars = async () => {
+        try {
+            let _tour = await getDocs(collection(db, 'tour'))
+            _tour = _tour.docs.map(t => ({
+                ...t.data(),
+                id: t.id
+            }))
+            console.log('_tour', _tour)
+            //  dispatch(setCars(_tour))
+            setDataTour(_tour.map(
+                (item) => {
+                    return {
+                        ...item,
+                        key: item.id
+                    };
+                }
+            ));
+
+
+
+        } catch (err) {
+            // setError(err.message);
+            setDataTour([]);
+
+        } finally {
+            // setLoading(false);
+        }
+    }
+
+    getDataCars()
+}, [])
   //them
   const [isModalVisibleThem, setIsModalVisibleThem] = useState(false);
   const [addBienSo, setAddBienSo] = useState();
@@ -216,6 +251,7 @@ function Car() {
   };
   const HandleSearch = (e) => {
     //Query
+    if(findWithMaXe ){
     onSnapshot(
       query(
         collection(db, 'bus'), where('maXe', '==', Number(findWithMaXe))), (snapshot) => {
@@ -226,8 +262,8 @@ function Car() {
 
           setDataCars(bus)
         })
-
-    console.log(DataCars)
+      }else {setReloadData(!reloadData)}
+    console.log(findWithMaXe)
   }
 
   const columnexport = [
@@ -271,7 +307,18 @@ function Car() {
       })
       .saveAs("DanhSachXe.xlsx");
     console.log(excel, "aa")
+
   };
+
+  const handleDeleteCar = () => {
+    if(DataTour.filter(k=> k.maXe ==DataCarsChecked.maXe ).length==0){
+     deleteDoc(doc(db,'bus',DataCarsChecked.id))
+     .then(() =>{
+      setReloadData(!reloadData)
+     })
+     .catch(err => toast.error(err))
+  }else toast.error("Xe dã có chuyến xe, không thể xóa!")
+}
   return (
     <div className='admin_car' style={{ padding: '36px 10px 10px 10px', width: '100%' }}>
       <div className='admin_tour_header'>
@@ -282,17 +329,7 @@ function Car() {
         <Button type="primary" onClick={showModalSua}><EditOutlined />Sửa</Button>
         <Button type="primary" style={{ background: '#5ba75b', border: '1px solid greenyellow' }} onClick={exportExcel}><ExportOutlined />Xuất Excel</Button>
 
-        <Button danger onClick={() =>
-          // toast.success("Xóa xe thành công!")
-          console.log({
-
-            bienSo: editBienSo,
-            gia: Number(editGia),
-            loaiXe: editLoaiXe,
-            soLuongGhe: Number(editSoLuongGhe)
-          }, DataCarsChecked
-          )
-        }
+        <Button danger onClick={handleDeleteCar}
         ><DeleteOutlined />Xóa</Button>
 
       </div>
