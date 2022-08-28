@@ -19,7 +19,8 @@ import {
   MenuUnfoldOutlined,
   CarOutlined,
   CommentOutlined,
-  SwapOutlined
+  SwapOutlined,
+  DashboardOutlined
 } from '@ant-design/icons';
 import User from './User'
 import Car from './Car'
@@ -28,6 +29,7 @@ import Routeeeee from './Route'
 import Ticket from './Ticket'
 import Logo from '../images/logo.png'
 import YeuCauDieuPhoi from './YeuCauDieuPhoi'
+import ThongKe from './ThongKe'
 
 
 function getItem(label, key, icon, children, type) {
@@ -96,6 +98,16 @@ const items = [
   }}>
     Yêu cầu điều phối xe
   </Link>, '6', <CommentOutlined />),
+   getItem(
+    <Link to="/admin/thongke" style={{
+      fontWeight: 'bold',
+      color: 'rgb(241 152 61)'
+    }}>
+      Thống kê
+    </Link>,
+    'link',
+    <DashboardOutlined />,
+  ),
   getItem(
     <Link to="/login" style={{
       fontWeight: 'bold',
@@ -106,6 +118,7 @@ const items = [
     'link',
     <LogoutOutlined />,
   ),
+ 
 
 ];
 
@@ -169,6 +182,8 @@ function Admin() {
         <Route path="tour" element={<Tour />}></Route>
         <Route path="route" element={<Routeeeee />}></Route>
         <Route path="ticket" element={<Ticket />}></Route>
+        <Route path="thongke" element={<ThongKe />}></Route>
+
         <Route path="yeucaudieuphoi" element={<YeuCauDieuPhoi />}></Route>
 
 

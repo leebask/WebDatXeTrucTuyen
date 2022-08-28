@@ -43,10 +43,11 @@ import 'react-toastify/dist/ReactToastify.css';
 import { doc, onSnapshot, query, where } from "firebase/firestore";
 import { PDFExport, savePDF } from "@progress/kendo-react-pdf";
 import { Input, Select } from 'antd'
+import PayPal from '../paypal/PayPal'
 const { Option } = Select;
 
 function HomeAccount({ isMenuOpen, setIsMenuOpen, }) {
-
+  const [checkout, setCheckOut] = useState(false);
   const user = useSelector(selectUser)
   const cars = useSelector(selectCars)
   const tours = useSelector(selectCartour)
@@ -500,8 +501,26 @@ function HomeAccount({ isMenuOpen, setIsMenuOpen, }) {
                     onClick={() => exportPDF(ticket.maVe)}
                   >In Vé</button>}
 
-                  {ticket.trangThai !== -1 && <button style={{ backgroundColor: "red", color: 'white' }} onClick={removeTicket(ticket.id)}>Hủy</button>}
-
+                  {ticket.trangThai !== -1 && <button style={{ backgroundColor: "red", color: 'white', marginRight: '16px'  }} onClick={removeTicket(ticket.id)}>Hủy</button>}
+                  <br />
+                  {ticket.trangThai !== -1 &&(
+                    <PayPal gia={DataTour[ticket.maCX]?.gia} 
+                    note={`${DataTour[ticket.maCX]?.ngayDi}_${ticket.maGhe}_${ticket.maCX}`}
+                    />
+                  )
+              //       (checkout ? (
+              //         <PayPal />
+              //       ) : (
+              //         <button style={{ backgroundColor: "blue", color: 'white' }} 
+              //         onClick={() => {
+              //           setCheckOut(true);
+              //         }}>Thanh toán PayPal</button>
+                      
+                    
+                  
+              //   )
+              // )
+              }
                   <br />
 
                 </div>
