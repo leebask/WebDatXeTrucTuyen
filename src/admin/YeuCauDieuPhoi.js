@@ -61,7 +61,7 @@ function YeuCauDieuPhoi() {
           dataIndex: 'email',
         },
         {
-          title: 'Mã xe điều phối',
+          title: 'Chuyến xe/LT',
           dataIndex: 'maCX',
         },
         {

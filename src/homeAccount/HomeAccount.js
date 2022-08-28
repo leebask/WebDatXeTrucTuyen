@@ -24,7 +24,7 @@ import { Pagination } from '@mui/material'
 import Footer from '../footer/Footer'
 //DB
 import { db } from '../firebase'
-import { collection, getDocs, updateDoc } from 'firebase/firestore'
+import { addDoc, collection, getDocs, updateDoc } from 'firebase/firestore'
 import { selectCartour, setCartour } from '../features/cartourSlice'
 import { setticket } from '../features/ticketSlice'
 
@@ -42,6 +42,8 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { doc, onSnapshot, query, where } from "firebase/firestore";
 import { PDFExport, savePDF } from "@progress/kendo-react-pdf";
+import { Input, Select } from 'antd'
+const { Option } = Select;
 
 function HomeAccount({ isMenuOpen, setIsMenuOpen, }) {
 
@@ -53,12 +55,14 @@ function HomeAccount({ isMenuOpen, setIsMenuOpen, }) {
 
   const [dayTourSearch, setDayTourSearch] = React.useState(null);
 
+  const [openDieuPhoi, setOpenDieuPhoi] = React.useState(false);
 
   const dispatch = useDispatch()
   const navigate = useNavigate();
 
   const [DataCars, setDataCars] = useState({});
   const [DataRoute, setDataRoute] = useState({});
+  const [DataRouteDieuPhoi, setDataRouteDieuPhoi] = useState();
 
   const [DataTour, setDataTour] = useState({});
   const [SelectedDataRoute, setSelectedDataRoute] = useState("");
@@ -135,6 +139,7 @@ function HomeAccount({ isMenuOpen, setIsMenuOpen, }) {
         }))
         console.log('route', _route)
         //  dispatch(setDataRoute(_route))
+        setDataRouteDieuPhoi(_route)
         setDataRoute(_route.reduce((obj, t) => ({
           ...obj,
           [t.ma]: t
@@ -210,24 +215,8 @@ function HomeAccount({ isMenuOpen, setIsMenuOpen, }) {
       .then(() => toast.success('Hủy vé thành công!'))
       .catch(err => toast.error(err))
   }
-  
-function xoa_dau(str) {
-  str = str.replace(/à|á|ạ|ả|ã|â|ầ|ấ|ậ|ẩ|ẫ|ă|ằ|ắ|ặ|ẳ|ẵ/g, "a");
-  str = str.replace(/è|é|ẹ|ẻ|ẽ|ê|ề|ế|ệ|ể|ễ/g, "e");
-  str = str.replace(/ì|í|ị|ỉ|ĩ/g, "i");
-  str = str.replace(/ò|ó|ọ|ỏ|õ|ô|ồ|ố|ộ|ổ|ỗ|ơ|ờ|ớ|ợ|ở|ỡ/g, "o");
-  str = str.replace(/ù|ú|ụ|ủ|ũ|ư|ừ|ứ|ự|ử|ữ/g, "u");
-  str = str.replace(/ỳ|ý|ỵ|ỷ|ỹ/g, "y");
-  str = str.replace(/đ/g, "d");
-  str = str.replace(/À|Á|Ạ|Ả|Ã|Â|Ầ|Ấ|Ậ|Ẩ|Ẫ|Ă|Ằ|Ắ|Ặ|Ẳ|Ẵ/g, "A");
-  str = str.replace(/È|É|Ẹ|Ẻ|Ẽ|Ê|Ề|Ế|Ệ|Ể|Ễ/g, "E");
-  str = str.replace(/Ì|Í|Ị|Ỉ|Ĩ/g, "I");
-  str = str.replace(/Ò|Ó|Ọ|Ỏ|Õ|Ô|Ồ|Ố|Ộ|Ổ|Ỗ|Ơ|Ờ|Ớ|Ợ|Ở|Ỡ/g, "O");
-  str = str.replace(/Ù|Ú|Ụ|Ủ|Ũ|Ư|Ừ|Ứ|Ự|Ử|Ữ/g, "U");
-  str = str.replace(/Ỳ|Ý|Ỵ|Ỷ|Ỹ/g, "Y");
-  str = str.replace(/Đ/g, "D");
-  return str;
-}
+
+
   const exportPDF = (ticketID) => {
     let element = document.getElementById(ticketID);
     // xoa_dau(element.toString())
@@ -238,6 +227,37 @@ function xoa_dau(str) {
 
     });
     console.log(element);
+  };
+  // dieu phoi 
+  const [textLoTrinh, setTextLoTrinh] = React.useState();
+  const [textNgayDi, setTextNgayDi] = React.useState(null);
+
+  const handleOpenDieuPhoi = () => {
+    setOpenDieuPhoi(true);
+  };
+  const handleCloseDieuPhoi = () => {
+    setOpenDieuPhoi(false);
+  };
+  const handleConfirmDieuPhoi = () => {
+    if (textLoTrinh && textNgayDi) {
+      addDoc(collection(db, 'dispatcher'), {
+        maCX: textLoTrinh,
+        email: user.email,
+        ngayDi: textNgayDi.format('DD/MM/YYYY'),
+        trangThai: 1
+      })
+        .then(data => {
+          setTextLoTrinh()
+          setTextNgayDi(null)
+          toast.success("Yêu cầu điều phối thành công!")
+          setOpenDieuPhoi(false);
+
+        })
+        .catch((error) => toast.error(error))
+
+    }
+    else toast.warning('Vui lòng nhập đủ thông tin!')
+    console.log(textLoTrinh, textNgayDi, DataRouteDieuPhoi.map(k => k.ma))
   };
 
   return (
@@ -306,8 +326,11 @@ function xoa_dau(str) {
               fontWeight: '500',
               fontSize: '15px',
               zIndex: '0',
-              position: 'relative'
-            }}>Yêu cầu điều phối xe</div>
+              position: 'relative',
+              cursor: 'pointer',
+            }}
+              onClick={handleOpenDieuPhoi}
+            >Yêu cầu điều phối xe</div>
             <Link to='' onClick={
               handleOpen
               // handleTestFirebase
@@ -444,19 +467,19 @@ function xoa_dau(str) {
                       Trạng thái: {ticket.trangThai === 1 ? "Đã đặt" : "Đã hủy"}
                     </p>
                   </div> */}
-                   {/* Dùng để in */}
-                   <div  id={ticket.maVe} >
+                  {/* Dùng để in */}
+                  <div id={ticket.maVe} >
                     <h2 style={{ color: "green" }} id="child-modal-title">MA VE:  {ticket.maVe}</h2>
-                    <p id="child-modal-description" onClick={() =>console.log(ticket)}>
+                    <p id="child-modal-description" onClick={() => console.log(ticket)}>
                       Ma chuyen:  {ticket.maCX}
                     </p>
-                    <p id="child-modal-description" onClick={() =>console.log(ticket)}>
+                    <p id="child-modal-description" onClick={() => console.log(ticket)}>
                       Email:  {ticket.email}
                     </p>
-                    <p id="child-modal-description" onClick={() =>console.log(ticket)}>
+                    <p id="child-modal-description" onClick={() => console.log(ticket)}>
                       SDT:  {ticket.sdt}
                     </p>
-                    <p id="child-modal-description" onClick={() =>console.log(ticket)}>
+                    <p id="child-modal-description" onClick={() => console.log(ticket)}>
                       Ngay dat:  {ticket.ngayDat}
                     </p>
                     <p id="child-modal-description">
@@ -480,7 +503,7 @@ function xoa_dau(str) {
                   {ticket.trangThai !== -1 && <button style={{ backgroundColor: "red", color: 'white' }} onClick={removeTicket(ticket.id)}>Hủy</button>}
 
                   <br />
-                 
+
                 </div>
 
               )
@@ -490,6 +513,69 @@ function xoa_dau(str) {
             <Button onClick={handleClose}>Đóng</Button>
 
           </Box>
+        </Modal>
+        <Modal
+          style={{ height: "200px !important" }}
+
+          classes={{
+            root: "css-6z8jno"
+          }}
+          // hideBackdrop
+          open={openDieuPhoi}
+          onClose={handleCloseDieuPhoi}
+          aria-labelledby="child-modal-title"
+          aria-describedby="child-modal-description"
+        >
+          <Box sx={{ width: 200 }}>
+            <div>
+              <div>Email:</div>
+              <Input readOnly={true} value={user?.email}></Input>
+            </div>
+            <div>
+              <div>Chọn tuyến:</div>
+              <select
+                className="cars__choose choosetour"
+                // showSearch
+                // placeholder="Chuyến"
+                onChange={(e) => { setTextLoTrinh(e.target.value) }}
+              // filterOption={(input, option) => option.children.toLowerCase().includes(input.toLowerCase())}
+              >
+                <option key={1} value=""  >Chọn chuyến</option>
+
+
+                {DataRouteDieuPhoi?.map((k) =>
+                  (<option key={k.ma} value={k.ma}>{k.noiDi} - {k.noiDen}</option>)
+
+
+                )}
+                {/* <option key={1} value='DakLak-SaiGon'>DakLak-SaiGon</option>
+                <option key={2} value='SaiGon-DakLak'>SaiGon-DakLak</option> */}
+              </select>
+            </div>
+            <div>
+              <div style={{ marginBottom: "5px" }}>Ngày đi:</div>
+              <DatePicker
+                value={textNgayDi}
+                label="Chọn ngày đi"
+                onChange={(newValue) => {
+                  // console.log(newValue.format('DD/MM/YYYY'));
+                  setTextNgayDi(newValue);
+                }}
+                renderInput={(params) => <TextField {...params} />}
+              ></DatePicker>
+            </div>
+            <div style={{
+              display: 'flex',
+              justifyContent: 'space-between',
+              margin: "15px"
+            }}>
+              <Button variant="outlined" onClick={handleCloseDieuPhoi}>Đóng</Button>
+              <Button variant="contained" onClick={handleConfirmDieuPhoi}>Xác nhận</Button>
+            </div>
+
+          </Box>
+
+
         </Modal>
 
       </div>

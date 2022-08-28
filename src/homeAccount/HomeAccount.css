@@ -166,7 +166,7 @@
     position: fixed;
     top: 50vh;
     left: 50vw;
-    height: 500px;
+    max-height: 500px;
     -webkit-transform: translate(-50%, -50%);
     -moz-transform: translate(-50%, -50%);
     -ms-transform: translate(-50%, -50%);
