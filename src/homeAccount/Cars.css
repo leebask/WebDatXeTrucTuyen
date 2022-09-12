@@ -10,7 +10,7 @@
 
 .cars__image>img {
   object-fit: contain;
-  width: 600px;
+  width: 400px;
 }
 
 .cars__typeCar {

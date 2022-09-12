@@ -212,7 +212,7 @@ function Route() {
       <Table rowSelection={rowSelection} columns={columns} dataSource={DataRoute}
         pagination={{ defaultPageSize: 5, showSizeChanger: true, pageSizeOptions: ['5', '10', '20', '30'] }}
       />
-      <Modal title="Thêm mới chuyến xe"
+      <Modal title="Sửa lộ trình"
         visible={isModalVisibleThem}
         onOk={handleOkThem}
         onCancel={handleCancelThem}>

@@ -88,7 +88,7 @@ function Tour() {
         }
 
         getDataCars()
-    }, [])
+    }, [reloadData])
 
     useEffect(() => {
         let arrCarNew = [];
@@ -109,7 +109,7 @@ function Tour() {
 
         setDataTour(arrCarNew)
 
-    }, [DataRoute])
+    }, [DataRoute,reloadData])
 
     //get cars
     const [DataCars, setDataCars] = useState([{}]);

@@ -464,6 +464,7 @@ function Cars({ imgSrc, maXe, bienSo, loaiXe, soLuongGhe, gia, tour, DataTicket,
                             <div>
                               <TextField
                                 // error
+                                type='number'
                                 id="outlined-error"
                                 label="Số điện thoại"
                                 defaultValue=""
