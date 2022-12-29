@@ -6,13 +6,12 @@ import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import Headerfull from '../Headerfull';
 import HeaderHomeAccount from './HeaderHomeAccount';
-import './Nhaxe.css'
+import './Nhaxe.css';
 import Menu from '../header/Menu';
 
 import Mapbox from '../mapbox/mapbox';
 import Footer from '../footer/Footer';
-import hinhlogo from '../images/logo.png'
-
+import hinhlogo from '../images/logo.png';
 
 function TabPanel(props) {
     const { children, value, index, ...other } = props;
@@ -23,8 +22,7 @@ function TabPanel(props) {
             hidden={value !== index}
             id={`simple-tabpanel-${index}`}
             aria-labelledby={`simple-tab-${index}`}
-            {...other}
-        >
+            {...other}>
             {value === index && (
                 <Box sx={{ p: 3 }}>
                     <Typography>{children}</Typography>
@@ -37,13 +35,13 @@ function TabPanel(props) {
 TabPanel.propTypes = {
     children: PropTypes.node,
     index: PropTypes.number.isRequired,
-    value: PropTypes.number.isRequired,
+    value: PropTypes.number.isRequired
 };
 
 function a11yProps(index) {
     return {
         id: `simple-tab-${index}`,
-        'aria-controls': `simple-tabpanel-${index}`,
+        'aria-controls': `simple-tabpanel-${index}`
     };
 }
 
@@ -57,10 +55,7 @@ export default function Nhaxe({ isMenuOpen, setIsMenuOpen }) {
     return (
         <>
             <>
-                <HeaderHomeAccount
-                    isMenuOpen={isMenuOpen}
-                    setIsMenuOpen={setIsMenuOpen}
-                />
+                <HeaderHomeAccount isMenuOpen={isMenuOpen} setIsMenuOpen={setIsMenuOpen} />
                 {isMenuOpen && <Menu />}
             </>
             <Box sx={{ width: '100%' }}>
@@ -74,25 +69,14 @@ export default function Nhaxe({ isMenuOpen, setIsMenuOpen }) {
                 {/* <TabPanel value={value} index={0}>
                     <Mapbox /> 
                 </TabPanel> */}
-                <div className="showTab">
-                {value===0&&<Mapbox />}
-                </div>
+                <div className="showTab">{value === 0 && <Mapbox />}</div>
                 <TabPanel value={value} index={1}>
-                    <h1>
-                        Khánh
-                    </h1>
-                    <h3>
-                        "Chất lượng là danh dự"
-                    </h3>
-                    <img
-                    src={hinhlogo}
-                    alt=''
-                    />
+                    <h1>Khánh</h1>
+                    <h3>"Chất lượng là danh dự"</h3>
+                    <img src={hinhlogo} alt="" />
                 </TabPanel>
                 <TabPanel value={value} index={2}>
-                    <h1>
-                    Khánh
-                    </h1>
+                    <h1>Khánh</h1>
                     <h5>Được thành lập tháng 5/2022.</h5>
                 </TabPanel>
             </Box>

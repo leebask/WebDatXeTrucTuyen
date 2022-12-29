@@ -1,19 +1,19 @@
-import { createSlice } from '@reduxjs/toolkit'
+import { createSlice } from '@reduxjs/toolkit';
 
 export const cartourSlice = createSlice({
     name: 'cartour',
     initialState: {
-      cartour: [],
+        cartour: []
     },
     reducers: {
-      setCartour: (state, action) => {
-        state.cartour = action.payload
-      }
+        setCartour: (state, action) => {
+            state.cartour = action.payload;
+        }
     }
-  })
+});
 
-  export const { setCartour } = cartourSlice.actions
+export const { setCartour } = cartourSlice.actions;
 
-  export const selectCartour = (state) => state.cartour.cartour
+export const selectCartour = (state) => state.cartour.cartour;
 
-  export default cartourSlice.reducer
+export default cartourSlice.reducer;

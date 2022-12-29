@@ -5,8 +5,6 @@ import { PieChart, Pie, Sector, Cell, ResponsiveContainer } from 'recharts';
 import { db } from '../firebase';
 import Title from './Title';
 
-
-
 const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042'];
 
 const RADIAN = Math.PI / 180;
@@ -29,52 +27,49 @@ export default function PieChartCar() {
     useEffect(() => {
         const getDataCars = async () => {
             try {
-                let _cars = await getDocs(collection(db, 'bus'))
-                _cars = _cars.docs.map(t => ({
+                let _cars = await getDocs(collection(db, 'bus'));
+                _cars = _cars.docs.map((t) => ({
                     ...t.data(),
                     id: t.id
-                }))
-                console.log('cars', _cars)
-                setDataCars(_cars.map(
-                    (item) => {
+                }));
+                console.log('cars', _cars);
+                setDataCars(
+                    _cars.map((item) => {
                         return {
                             ...item,
                             key: item.id
                         };
-                    }
-                ));
-
-
-
+                    })
+                );
             } catch (err) {
                 // setError(err.message);
                 setDataCars([]);
-
             } finally {
                 // setLoading(false);
             }
-        }
+        };
 
-        getDataCars()
-    }, [])
-    const [totalCars, settotalCars] = useState()
-    const [data, setdata] = useState()
+        getDataCars();
+    }, []);
+    const [totalCars, settotalCars] = useState();
+    const [data, setdata] = useState();
 
-    const [totalCarsGiuongNam, settotalCarsGiuongNam] = useState()
- 
+    const [totalCarsGiuongNam, settotalCarsGiuongNam] = useState();
+
     useEffect(() => {
-        settotalCars(DataCars.length)
-        settotalCarsGiuongNam(DataCars?.filter(k => k.loaiXe == "Giường nằm").length)
-        setdata([{ name: 'Group A', value: DataCars?.filter(k => k.loaiXe == "Giường nằm").length },
-        { name: 'Group B', value: DataCars.length- DataCars?.filter(k => k.loaiXe == "Giường nằm").length },])
-    }, [DataCars])
+        settotalCars(DataCars.length);
+        settotalCarsGiuongNam(DataCars?.filter((k) => k.loaiXe == 'Giường nằm').length);
+        setdata([
+            { name: 'Group A', value: DataCars?.filter((k) => k.loaiXe == 'Giường nằm').length },
+            { name: 'Group B', value: DataCars.length - DataCars?.filter((k) => k.loaiXe == 'Giường nằm').length }
+        ]);
+    }, [DataCars]);
 
     return (
         <React.Fragment>
             <Title>Tổng số xe nhà xe sở hữu: {totalCars} xe</Title>
-            <div style={{fontWeight:'bold'}}>Giường nằm: {totalCarsGiuongNam} xe</div>
-            <div style={{fontWeight:'bold'}}>Ghế ngồi: {totalCars - totalCarsGiuongNam} xe</div>
-
+            <div style={{ fontWeight: 'bold' }}>Giường nằm: {totalCarsGiuongNam} xe</div>
+            <div style={{ fontWeight: 'bold' }}>Ghế ngồi: {totalCars - totalCarsGiuongNam} xe</div>
 
             <ResponsiveContainer width="100%" height="100%">
                 <PieChart width={400} height={400}>
@@ -86,8 +81,7 @@ export default function PieChartCar() {
                         label={renderCustomizedLabel}
                         outerRadius={80}
                         fill="#8884d8"
-                        dataKey="value"
-                    >
+                        dataKey="value">
                         {data?.map((entry, index) => (
                             <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                         ))}

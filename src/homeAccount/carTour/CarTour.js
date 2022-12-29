@@ -1,33 +1,27 @@
-import React, { useEffect, useRef, useState } from 'react'
-import Menu from '../../header/Menu'
-import HeaderHomeAccount from '../HeaderHomeAccount'
+import React, { useEffect, useRef, useState } from 'react';
+import Menu from '../../header/Menu';
+import HeaderHomeAccount from '../HeaderHomeAccount';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
 import Typography from '@mui/material/Typography';
 import { Box, CardActionArea, Modal } from '@mui/material';
-import './CarTour.css'
+import './CarTour.css';
 import Mapbox from '../../mapbox/mapbox';
 import Footer from '../../footer/Footer';
 import MapboxDirection from '../../mapbox/mapboxdirection';
 
-
-
-
-
-
-
 function CarTour() {
-    const [isMenuOpen, setIsMenuOpen] = useState(false)
-    const a = useRef()
+    const [isMenuOpen, setIsMenuOpen] = useState(false);
+    const a = useRef();
 
     const [open, setOpen] = React.useState(false);
-    const [namePlace, setNamePlace] = useState("")
+    const [namePlace, setNamePlace] = useState('');
     const handleOpen = (e) => {
-        e.preventDefault()
-        setOpen(true)
-        setNamePlace(a.current.outerText)
-    }
+        e.preventDefault();
+        setOpen(true);
+        setNamePlace(a.current.outerText);
+    };
     const handleClose = () => setOpen(false);
 
     const style = {
@@ -40,7 +34,7 @@ function CarTour() {
         bgcolor: 'background.paper',
         border: '2px solid #000',
         boxShadow: 24,
-        p: 4,
+        p: 4
     };
 
     //test api
@@ -51,11 +45,11 @@ function CarTour() {
     // useEffect(() => {
     //     const getData = async () => {
     //       try {
-            
+
     //         const response = await fetch(
     //           `https://api-xe-khach.herokuapp.com/bus`);
     //         console.log('response',response)
-            
+
     //         // if (!response.ok) {
     //         //     console.log('not ok')
     //         //   throw new Error(
@@ -63,9 +57,9 @@ function CarTour() {
     //         //   );
     //         // }
     //         console.log('ok')
-            
+
     //         let actualData = await response.json();
-            
+
     //         console.log("dataa1 "+actualData)
     //         setData(actualData);
     //         setError(null);
@@ -74,7 +68,7 @@ function CarTour() {
     //         setData(null);
     //       } finally {
     //         setLoading(false);
-    //       }  
+    //       }
     //     }
     //     getData()
     //   }, [])
@@ -89,7 +83,7 @@ function CarTour() {
     //         headers: { 'Content-Type': 'application/json' },
     //         body: JSON.stringify({ title: 'React Hooks POST Request Example' })
     //     };
-    //     fetch('https://api-xe-khach.herokuapp.com/bus',{ 
+    //     fetch('https://api-xe-khach.herokuapp.com/bus',{
     //         mode: 'no-cors' // 'cors' by default
     //     }, requestOptions)
     //         .then(response => response.json())
@@ -98,17 +92,12 @@ function CarTour() {
     // // empty dependency array means this effect will only run once (like componentDidMount in classes)
     // }, []);
 
-    
     // {console.log("dataa1 "+data)}
     return (
         <div>
-             
-             {/* {console.log("test post "+postId)} */}
+            {/* {console.log("test post "+postId)} */}
             <>
-                <HeaderHomeAccount
-                    isMenuOpen={isMenuOpen}
-                    setIsMenuOpen={setIsMenuOpen}
-                />
+                <HeaderHomeAccount isMenuOpen={isMenuOpen} setIsMenuOpen={setIsMenuOpen} />
                 {isMenuOpen && <Menu />}
             </>
             <div className="Card">
@@ -121,15 +110,13 @@ function CarTour() {
                             alt="green iguana"
                         />
                         <CardContent>
-                            <Typography gutterBottom variant="h5" component="div" >
+                            <Typography gutterBottom variant="h5" component="div">
                                 Sài gòn - Đắk Lắk
                             </Typography>
                             <Typography variant="body2" color="text.secondary">
                                 Từ 100.000 VND
                             </Typography>
-                           
                         </CardContent>
-                        
                     </CardActionArea>
                 </Card>
                 <Card sx={{ maxWidth: 345 }} onClick={handleOpen}>
@@ -154,14 +141,13 @@ function CarTour() {
                     open={open}
                     onClose={handleClose}
                     aria-labelledby="modal-modal-title"
-                    aria-describedby="modal-modal-description"
-                >
+                    aria-describedby="modal-modal-description">
                     <Box sx={style}>
                         <Typography id="modal-modal-title" variant="h6" component="h2">
                             {namePlace}
                         </Typography>
                         {/* <Typography id="modal-modal-description" sx={{ mt: 2 }}> */}
-                            <MapboxDirection />
+                        <MapboxDirection />
                         {/* </Typography> */}
                     </Box>
                 </Modal>
@@ -177,7 +163,7 @@ function CarTour() {
           ))}
       </ul> */}
         </div>
-    )
+    );
 }
 
-export default CarTour
+export default CarTour;

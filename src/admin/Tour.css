@@ -1,8 +1,6 @@
-
-
-.admin_tour_header{
- display: flex;
- gap:10px;
- justify-content: flex-end;
- padding-bottom:  74px;
+.admin_tour_header {
+    display: flex;
+    gap: 10px;
+    justify-content: flex-end;
+    padding-bottom: 74px;
 }

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import './App.css';
-import { BrowserRouter as Router, Routes, Route, Redirect } from 'react-router-dom'
+import { BrowserRouter as Router, Routes, Route, Redirect } from 'react-router-dom';
 import Headerfull from './Headerfull';
 import SignUp from './login/Signup';
 import Loginfull from './Loginfull';
@@ -17,75 +17,66 @@ import Footer from './footer/Footer';
 import { ToastContainer } from 'react-toastify';
 import Admin from './admin/Admin';
 
-
-
-
-
-
-
 function App() {
-  const [isMenuOpen, setIsMenuOpen] = useState(false)
-  const dispatch = useDispatch()
+    const [isMenuOpen, setIsMenuOpen] = useState(false);
+    const dispatch = useDispatch();
 
-  useEffect(() => {
-    auth.onAuthStateChanged((userAuth) => {
-      if (userAuth) {
-        // User is signed in
-        dispatch(
-          login({
-            email: userAuth.email,
-            uid: userAuth.uid,
-            displayName: userAuth.displayName,
-          })
-        )
-      } else {
-        // User is signed out
-        dispatch(logout())
-      }
-    })
-  }, [dispatch])
+    useEffect(() => {
+        auth.onAuthStateChanged((userAuth) => {
+            if (userAuth) {
+                // User is signed in
+                dispatch(
+                    login({
+                        email: userAuth.email,
+                        uid: userAuth.uid,
+                        displayName: userAuth.displayName
+                    })
+                );
+            } else {
+                // User is signed out
+                dispatch(logout());
+            }
+        });
+    }, [dispatch]);
 
-  return (
-    <Router>
-      <></>
-      <div className='app'>
-        <Routes>
-          <Route path="/" element={<Headerfull />} />
-          <Route path="/login" element={<Loginfull />} />
-          <Route path="/signup" element={<SignUp />} />
-          {/* <PrivateRoute path="/homeaccount" element={<HomeAccountFull/>} /> */}
-          {PrivateRoute({
-            path: "/homeaccount",
-            element: <HomeAccountFull />
-          })}
+    return (
+        <Router>
+            <></>
+            <div className="app">
+                <Routes>
+                    <Route path="/" element={<Headerfull />} />
+                    <Route path="/login" element={<Loginfull />} />
+                    <Route path="/signup" element={<SignUp />} />
+                    {/* <PrivateRoute path="/homeaccount" element={<HomeAccountFull/>} /> */}
+                    {PrivateRoute({
+                        path: '/homeaccount',
+                        element: <HomeAccountFull />
+                    })}
 
-          <Route path="/nhaxe" element={
-            <Nhaxe isMenuOpen={isMenuOpen}
-              setIsMenuOpen={setIsMenuOpen} />} />
+                    <Route path="/nhaxe" element={<Nhaxe isMenuOpen={isMenuOpen} setIsMenuOpen={setIsMenuOpen} />} />
 
-          <Route path="/contact" element={
-            <ConTact isMenuOpen={isMenuOpen}
-              setIsMenuOpen={setIsMenuOpen} />} />
+                    <Route
+                        path="/contact"
+                        element={<ConTact isMenuOpen={isMenuOpen} setIsMenuOpen={setIsMenuOpen} />}
+                    />
 
-          {/* <Route path="/account" element={
+                    {/* <Route path="/account" element={
             <Account  isMenuOpen={isMenuOpen}
             setIsMenuOpen={setIsMenuOpen} />} /> */}
-          {PrivateRoute({
-            path: "/account",
-            element: <Account isMenuOpen={isMenuOpen}
-              setIsMenuOpen={setIsMenuOpen} />
-          })}
+                    {PrivateRoute({
+                        path: '/account',
+                        element: <Account isMenuOpen={isMenuOpen} setIsMenuOpen={setIsMenuOpen} />
+                    })}
 
-          <Route path="/cartour" element={<CarTour />} />
-          <Route path="/admin/*" element={<Admin />} >
-
-            {/* <Route index path="user" element={<CarTour />} /> */}
-          </Route>
-        </Routes>
-        <ToastContainer />
-      </div>
-    </Router>
-  );
+                    <Route path="/cartour" element={<CarTour />} />
+                    <Route path="/admin/*" element={<Admin />}>
+                        {/* <Route index path="user" element={<CarTour />} /> */}
+                    </Route>
+                </Routes>
+                <ToastContainer />
+            </div>
+        </Router>
+    );
 }
 
 export default App;

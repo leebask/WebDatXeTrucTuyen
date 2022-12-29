@@ -1,46 +1,43 @@
-
 .content-section {
     display: flex;
     flex-direction: column;
     padding: 50px 200px 0 200px;
 }
-.contact-section-heading, .contact-section-sub-heading{
+.contact-section-heading,
+.contact-section-sub-heading {
     align-self: center !important;
 }
 .text-input-contact {
-   
     line-height: 24px;
     width: 100%;
     min-height: 100px;
-
 }
 
-.text-contact-line{
+.text-contact-line {
     font-size: 18px;
     font-style: normal;
-   
+
     font-weight: 600;
 }
-.text-contact-line a{
+.text-contact-line a {
     color: #101aef;
     opacity: 0.8;
 }
-.text-contact-line a:hover{
+.text-contact-line a:hover {
     opacity: 1;
 }
-.icon-contact{
-   margin: 14px;
+.icon-contact {
+    margin: 14px;
 }
-.input-contact{
+.input-contact {
     border: 1px solid #ddd;
     margin: 4px;
     padding: 8px;
     width: 40%;
 }
-.list-input-contact{
-    
+.list-input-contact {
 }
-.button-contact{
+.button-contact {
     background-color: #000;
     color: #fff;
     border: none;
@@ -50,28 +47,26 @@
     margin-right: 30px;
     border-radius: 3px;
     cursor: pointer;
-    margin-left:  4px;
+    margin-left: 4px;
     margin-top: 10px;
-
 }
-.button-contact:hover{
+.button-contact:hover {
     background-color: #ccc;
     color: #000;
 }
-.fix-tablet-contact{
-     margin-top: 24px;
+.fix-tablet-contact {
+    margin-top: 24px;
 }
 
-.textArena{
-     border: 1px solid #ddd !important;
-     margin-left:  4px;
-     height: 110px !important;
-     width: 60% !important;
-     font-family: sans-serif;
-     font-size: 13px;
+.textArena {
+    border: 1px solid #ddd !important;
+    margin-left: 4px;
+    height: 110px !important;
+    width: 60% !important;
+    font-family: sans-serif;
+    font-size: 13px;
 }
 
-
-.css-iljtu2-MuiRating-root{
+.css-iljtu2-MuiRating-root {
     font-size: 1.8rem !important;
 }
